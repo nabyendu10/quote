@@ -87,6 +87,10 @@ body{font-family:var(--font); background:#efefef; margin:14px; color:#111}
 .page-project .img-block{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#fafafa;border:1px solid #eee}
 .page-project .img-block img{max-width:98%;max-height:98%;object-fit:contain;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
 
+/* Vendor page styling */
+.page-vendor .vendor-block{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#fafafa;border:1px solid #eee}
+.page-vendor .vendor-block img{max-width:80%;max-height:80%;object-fit:contain;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+
 /* Clean table styling */
 .clean-table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:4mm}
 .clean-table th,.clean-table td{border:1px solid #bfbfbf;padding:4px 6px;vertical-align:top;word-wrap:break-word}
@@ -152,9 +156,42 @@ h2 {
 /* General page full text (fallback) */
 .page-fulltext .content{overflow:auto;font-size:12px;line-height:1.45}
 
+/* Optimize for PDF generation - reduce visual complexity */
+.pdf-optimized {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.pdf-optimized .a4page {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.pdf-optimized img {
+  max-width: 100%;
+  height: auto;
+  image-rendering: optimizeQuality;
+}
+
+/* Remove gradients and shadows for PDF to reduce file size */
+.pdf-optimized .page-logo-only .content {
+  background: #ffffff !important;
+}
+
+.pdf-optimized .page-project .img-block img {
+  box-shadow: none !important;
+}
+
 /* print rules */
 @media print{
   body{margin:0;background:transparent}
   .a4page{box-shadow:none;border:none;page-break-after:always}
   .topbar,.preview-actions{display:none}
+  
+  /* Remove all shadows and gradients in print */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    background-image: none !important;
+  }
 }

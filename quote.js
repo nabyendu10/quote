@@ -624,6 +624,15 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     return 'assets/sta-logo/sta-logo.png';
   }
 
+  // get vendor logo src (from dropdown selection)
+  function getVendorLogoSrc(){
+    const selectedVendor = getSelectedVendor();
+    if (selectedVendor) {
+      return `assets/vendor-logo/${selectedVendor}-logo.png`;
+    }
+    return null; // No vendor selected
+  }
+
   // Read header right lines (fixed as per your instruction)
   const headerRightHTML = `
     <div>www.startrackautomation.in</div>
@@ -766,11 +775,9 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
       projectDetailsHtml = `
         <div class="project-details">
           <div class="project-left">
-            <h3>Project Information</h3>
             <div class="project-content">${escape(leftContent)}</div>
           </div>
           <div class="project-right">
-            <h3>Offer Details</h3>
             <div class="project-content">${escape(rightContent)}</div>
           </div>
         </div>
@@ -821,6 +828,29 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     </div>
   `;
   pageCounter++;
+
+  // VENDOR IMAGE PAGE (if vendor is selected, show before project images)
+  const vendorLogoSrc = getVendorLogoSrc();
+  if (vendorLogoSrc) {
+    pagesHtml += `
+      <div class="a4page page-vendor">
+        <div class="header">
+          <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
+          <div class="center">Vendor Information</div>
+          <div class="right">${headerRightHTML}</div>
+        </div>
+        <div class="content">
+          <div class="vendor-block"><img src="${vendorLogoSrc}" alt="vendor-logo"></div>
+        </div>
+        <div class="footer">
+          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
+          <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
+          <div>Page ${pageCounter} / TOTAL</div>
+        </div>
+      </div>
+    `;
+    pageCounter++;
+  }
 
   // PROJECT DESCRIPTION IMAGE PAGES (one page per uploaded image - full page each)
   uploadedImageSrcs.forEach((imageSrc, idx)=>{
@@ -971,16 +1001,130 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
               async function buildPDF(){
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p','mm','a4');
-                for (let i=0;i<pages.length;i++){
-                  const page = pages[i];
-                  // render the page separately
-                  const canvas = await html2canvas(page, { scale: 2, useCORS:true, backgroundColor:'#ffffff' });
-                  const imgData = canvas.toDataURL('image/png');
-                  const imgWidth = 210;
-                  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                  if (i > 0) pdf.addPage();
-                  pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                
+                // Helper function to prepare images without compression
+                function prepareImage(imgSrc) {
+                  return new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = function() {
+                      // Use original image without compression
+                      resolve(imgSrc);
+                    };
+                    img.onerror = function() {
+                      resolve(imgSrc); // Fallback to original even if load fails
+                    };
+                    img.src = imgSrc;
+                  });
                 }
+                
+                // Use html2canvas for complex pages with high quality
+                async function renderPageToCanvas(page) {
+                  const canvas = await html2canvas(page, { 
+                    scale: 1.5,  // Higher scale for better quality
+                    useCORS: true, 
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    allowTaint: true,
+                    removeContainer: false,
+                    imageTimeout: 0,
+                    width: page.offsetWidth,
+                    height: page.offsetHeight,
+                    onclone: function(clonedDoc) {
+                      // Clean up interactive elements but maintain visual quality
+                      const buttons = clonedDoc.querySelectorAll('button, input, .delete-btn, .add-btn');
+                      buttons.forEach(btn => btn.style.display = 'none');
+                    }
+                  });
+                  
+                  // Use PNG for better quality (no compression)
+                  return canvas.toDataURL('image/png');
+                }
+                
+                try {
+                  for (let i = 0; i < pages.length; i++) {
+                    const page = pages[i];
+                    
+                    if (i > 0) pdf.addPage();
+                    
+                    // Get page type for different handling
+                    const isLogoPage = page.classList.contains('page-logo-only');
+                    const isProjectPage = page.classList.contains('page-project');
+                    const isVendorPage = page.classList.contains('page-vendor');
+                    
+                    if (isLogoPage) {
+                      // Handle logo page with direct image insertion - no compression
+                      const logoImg = page.querySelector('img');
+                      if (logoImg && logoImg.src) {
+                        const logoSrc = await prepareImage(logoImg.src);
+                        // Center the logo with original quality
+                        pdf.addImage(logoSrc, 'PNG', 60, 100, 90, 60);
+                      }
+                      
+                      // Add minimal text
+                      pdf.setFontSize(8);
+                      pdf.setTextColor(150);
+                      pdf.text('Page 1', 105, 280, { align: 'center' });
+                      
+                    } else if (isProjectPage) {
+                      // Handle project image pages with direct image insertion - no compression
+                      const projectImg = page.querySelector('.img-block img');
+                      if (projectImg && projectImg.src) {
+                        const imageSrc = await prepareImage(projectImg.src);
+                        
+                        // Add header
+                        pdf.setFontSize(16);
+                        pdf.setTextColor(44, 85, 48);
+                        const headerText = page.querySelector('.header .center').textContent;
+                        pdf.text(headerText, 105, 20, { align: 'center' });
+                        
+                        // Add image (centered, large) with original quality
+                        pdf.addImage(imageSrc, 'PNG', 20, 30, 170, 200);
+                        
+                        // Add footer
+                        pdf.setFontSize(8);
+                        pdf.setTextColor(100);
+                        const footerText = page.querySelector('.footer').textContent.trim();
+                        pdf.text(footerText, 105, 280, { align: 'center' });
+                      }
+                      
+                    } else if (isVendorPage) {
+                      // Handle vendor image pages with direct image insertion - no compression
+                      const vendorImg = page.querySelector('.vendor-block img');
+                      if (vendorImg && vendorImg.src) {
+                        const vendorSrc = await prepareImage(vendorImg.src);
+                        
+                        // Add header
+                        pdf.setFontSize(16);
+                        pdf.setTextColor(44, 85, 48);
+                        const headerText = page.querySelector('.header .center').textContent;
+                        pdf.text(headerText, 105, 20, { align: 'center' });
+                        
+                        // Add vendor image (centered, large) with original quality
+                        pdf.addImage(vendorSrc, 'PNG', 40, 60, 130, 120);
+                        
+                        // Add footer
+                        pdf.setFontSize(8);
+                        pdf.setTextColor(100);
+                        const footerText = page.querySelector('.footer').textContent.trim();
+                        pdf.text(footerText, 105, 280, { align: 'center' });
+                      }
+                      
+                    } else {
+                      // For other pages, use canvas with high quality
+                      const imgData = await renderPageToCanvas(page);
+                      
+                      const imgWidth = 210;
+                      const imgHeight = 297; // Fixed A4 height to prevent aspect ratio issues
+                      
+                      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                    }
+                  }
+                } catch (error) {
+                  console.error('PDF generation error:', error);
+                  alert('Error generating PDF. Please try again.');
+                  return;
+                }
+                
                 pdf.save('quotation.pdf');
               }
             })();
