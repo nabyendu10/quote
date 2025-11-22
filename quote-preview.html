@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Quotation Preview</title>
+  <link rel="stylesheet" href="preview.css">
+  <link rel="stylesheet" href="quote.css">
+</head>
+<body>
+  <div class="topbar">
+    <div class="title">Quotation — Preview</div>
+    <div class="controls preview-actions">
+      <button id="downloadPdfBtn">Download PDF</button>
+      <button id="closeBtn">Close</button>
+    </div>
+  </div>
+
+  <div id="pagesContainer" class="preview-wrap"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    // Controls wiring will be attached dynamically when parent writes HTML,
+    // but implement close and PDF building fallback here if needed.
+    document.addEventListener('click', function (e) {
+      if (e.target && e.target.id === 'closeBtn') window.close();
+    });
+  </script>
+</body>
+</html>

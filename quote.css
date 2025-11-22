@@ -1,0 +1,430 @@
+.navbar {
+    position: sticky;
+    top: 0;
+    background-color: rgb(22, 255, 212);
+    color: #111;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.page-container {
+    max-width: 1080px;
+    margin: 0 auto;
+    background: transparent;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Geneva, Verdana, sans-serif;
+}
+
+.logo-button button {
+    padding: 8px 10px;
+    font-size: 16px;
+    background-color: #0099ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#logoContainer {
+    width: 600px;
+    height: 600px;
+    padding: 8px;
+    border: 2px solid #111;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    object-fit: contain;
+}
+
+#logoContainer img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+
+.offer-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.offerBtn {
+    padding: 8px 8px;
+    font-size: 15px;
+    background-color: #0099ff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#offerDisplay {
+    width: 500px;
+    height: 70px;
+    padding: 8px 8px;
+    border: 1px solid #111;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+
+
+
+.offer-display-box {
+    width: 80%;
+    margin : 20px auto;
+    padding: 10px;
+    border: 1px solid #111;
+    border-radius: 6px;
+    background: #f9f9f9;
+}
+
+.offer-line {
+    min-height: 24px;
+    padding: 4px 6px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 8px;
+    outline: none;
+    font-size: 16px;
+    white-space: pre-wrap;
+    text-align: center;   /* <-- THIS makes text centered */
+}
+
+/* Placeholder effect */
+.offer-line:empty:before {
+    content: attr(data-placeholder);
+    color: #999;
+}
+
+
+
+
+
+.table-box {
+    width: 80%;
+    margin: 20px auto;
+    border: 1px solid #000;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+
+.row {
+    display: flex;
+    width: 100%;
+}
+
+.cell {
+    flex: 1;
+    border-right: 1px solid #000;
+    padding: 10px;
+    min-height: 150px;
+}
+
+.cell:last-child {
+    border-right: none;
+}
+
+[contenteditable="true"] {
+    outline: none;
+    cursor: text;
+}
+
+.rev-container div {
+     margin-top: 4px;
+}
+
+button {
+    padding: 5px 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    background-color: #0099ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+
+.upload-area {
+    margin-top: 20px;
+}
+
+.preview-area {
+    width: 400px;
+    height: 400px;
+    border: 1px solid #111;
+    margin: 20px auto;   /* <-- added to center */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+  
+    object-fit: contain;
+}
+
+#preview-area img {
+    width: auto;
+    height: auto;
+    object-fit: cover;
+}
+
+
+.table-container {
+  width: 100%;
+  overflow-x: auto; /* Makes table scrollable on small screens */
+  margin-top: 15px;
+  background: #fffdfb;
+  border: 1px solid #111;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto; /* Automatically adjusts column widths */
+}
+
+.table-container th,
+.table-container td {
+  border: 1px solid #e1d7cc;
+  padding: 8px 10px;
+  text-align: center;
+  font-size: 13px;
+  color: #2b2b2b;
+  word-wrap: break-word;
+}
+
+.table-container th {
+  background-color: #f7f2ed;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.table-container tr:nth-child(even) {
+  background-color: #fcf9f6;
+}
+
+.table-container tr:hover {
+  background-color: #f1ece6;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.table-container td[contenteditable="true"]:focus {
+  outline: 2px solid #8a7258;
+  background-color: #fffefb;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-auto-rows: minmax(100px, auto);
+    gap: 8px;
+}
+
+.delete-row-btn {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+}
+
+.delete-row-btn:hover {
+  color: red;
+}
+
+.add-row-btn, .clear-table-btn {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+}
+
+.quote-btn {
+  display: flex;
+  justify-content: flex-end;
+  margin: 20px 0; 
+}
+
+.quote-btn button {
+  padding: 10px 20px;
+  font-size: 20px;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.gst-rate-input {
+  width: 60px;
+  height: 40px;
+  text-align: center;
+}
+
+.price-item {
+    width: 100%;
+    border-collapse: collapse; /* Merges cell borders into a single line */
+    margin: 25px 0;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.price-table-container {
+    margin: 25px 0;
+    padding: 15px;
+    border: 1px solid #111;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.le-container h2 {
+    margin-bottom: 12px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#priceTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#priceTable th {
+    background: #dcdcdc;
+    padding: 10px;
+    border: 1px solid #000;
+    font-weight: 700;
+}
+
+#priceTable td {
+    padding: 8px 10px;
+    border: 1px solid #000;
+    font-size: 15px;
+}
+
+#priceTable td[contenteditable="true"] {
+    background: #fffef7;
+}
+
+.sn {
+    text-align: center;
+    width: 60px;
+    font-weight: bold;
+    background: #f5f5f5;
+}
+
+.add-row-btn {
+    margin-top: 12px;
+    padding: 8px 12px;
+    font-size: 16px;
+    background: #0099ff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-row-btn:hover {
+    background: #007acc;
+}
+
+.sub-row td {
+    background: #f9f9f9;
+}
+
+.delete-subrow-btn {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #d00;
+}
+
+.delete-subrow-btn:hover {
+    color: #a00;
+}
+
+
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full viewport height */
+}
+
+#myCanvas {
+    width: 450px;
+    height: 600px;
+    border: 1px solid #111;
+    cursor: crosshair;
+    object-fit: contain;
+}
+
+#fileInput {
+    margin-bottom: 10px;
+}
+
+#uploadButton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#uploadButton:hover {
+    background-color: #3e8e41;
+}
+
+.company-info-box {
+    border: 1px solid #000;    /* BLACK BORDER */
+    padding: 12px;             /* space inside */
+    margin: 20px auto;
+    border-radius: 4px;
+    width: 700px;
+}
+
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.info-table td {
+    padding: 6px 8px;
+}
+
+/* Left label cell */
+.info-table .label {
+    width: 180px;
+    background: #dcdcdc;
+}
+
+/* colon */
+.info-table .colon {
+    width: 20px;
+    text-align: center;
+    font-weight: bold;
+    background: #dcdcdc;
+}
+
+/* editable right cell */
+.info-table .value[contenteditable="true"] {
+    background: #dcdcdc;
+    outline: none;
+}
+
+.info-table .value:focus {
+    background: #dcdcdc
+}

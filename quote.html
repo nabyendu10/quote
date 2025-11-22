@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotation Generator</title>
+    <link rel="stylesheet" href="quote.css">
+</head>
+<body>
+    <div class="navbar" id="navbar">
+        <h1>Quotation Generator</h1>
+    </div>
+    <div class="page-container">
+        <!-- <h2>...</h2> -->
+        <!--STAIPL logo-->
+        <div class="logo-button">
+            <h2>Select Transport From:</h2>
+            <button id="btnSta">STA</button>
+            <button id="btnStaipl">STAIPL</button>
+        </div>
+
+        <div id="logoContainer"></div>
+
+        <!--Offer Type-->
+        <h2>Select Offer Type:</h2>
+        <div class="offer-display-box">
+
+            <div id="line1" class="offer-line" contenteditable="true" data-placeholder="Write Offer Type"></div>
+            <div id="line2" class="offer-line" contenteditable="true" data-placeholder="Type of Work (Example: HVAC SYSTEM)"></div>
+            <div id="line3" class="offer-line" contenteditable="true" data-placeholder="Write Description"></div>
+            <div id="line4" class="offer-line" contenteditable="true" data-placeholder="Company Name"></div>
+
+        </div>
+        <br>
+        <!--project details-->
+        <h2>Details about the project</h2>
+        <div class="table-box">
+           <div class="row">
+
+               <!-- LEFT SIDE -->
+               <div class="cell" contenteditable="true">
+                   Enquiry Reference:<br><br>
+
+                   End User:<br>
+                   Purchaser:<br>
+                   Contractor:<br>
+                   Consultant:<br>
+                   Contact Person:<br>
+               </div>
+           
+               <!-- RIGHT SIDE -->
+               <div class="cell">
+
+                   <div contenteditable="true">
+                       Offer Reference:<br>
+                       Rev. No:<br><br>
+
+                       Offer Date:<br>
+                       Date:<br><br>
+                   </div>
+               
+                   <!-- REVISED DATE LIST -->
+                   <div id="revBox" class="rev-container">
+                        <div contenteditable="true">Revised date:</div>
+                    </div>
+               
+                   <!-- BUTTON -->
+                   <button id="addRevisionBtn">Add Revised Date</button>
+               
+                   <br><br>
+                   <div class="prepared-box">
+                        <span class="label">Offer Prepared by:</span>
+                        <span class="value" contenteditable="true"></span>
+                    </div>
+               
+               </div>
+           </div>
+        </div>
+
+        <!--image upload-->
+        <div class="upload-area">
+            <h2>Upload Image:</h2>
+            <input type="file" id="imageUpload" accept="image/*">
+            <h6>(Max size: 2MB)</h6>
+        </div>
+        <div class="preview-area">
+            <img id="imagePreview" style="display:none;">
+        </div>
+
+        <!--Body Container-->
+        <div class="body-container">
+            <h2>Project Description in Details:</h2>
+            <input type="file" id="fileInput" multiple>
+            <button id="uploadButton">Upload</button>
+            <canvas id="myCanvas"></canvas>
+            
+            <div class="control">
+                <!--crop image and control-->
+            </div>
+        </div>
+
+
+
+        <!--Details From-->
+
+        <div class="offer-box"></div>
+
+
+        <h2>Item List Table:</h2>
+
+        <div class="table-container">
+            <div class="table-action">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>SL no.</th>
+                            <th>Model</th>
+                            <th>Description</th>
+                            <th>HSN/SAC</th>
+                            <th>Qty</th>
+                            <th>UOM</th>
+                            <th>List Price</th>
+                            <th>Max Discount</th>
+                            <th>Unit Price</th>
+                            <th>Discount</th>
+                            <th>Total</th>
+                            <th><button id="addRowBtn" title="Add Row">➕</button></th>
+                        </tr>
+                    </thead>
+                
+                    <!-- FIRST FIXED ROW -->
+                    <tbody id="firstRow">
+                        <tr>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td><button class="delete-row-btn">🗑️</button></td>
+                        </tr>
+                    </tbody>
+                
+                    <!-- DYNAMIC ITEM ROWS -->
+                    <tbody id="itemRows"></tbody>
+                
+                    <!-- GST SECTION -->
+                    <tbody id="gstSection">
+                        <tr>
+                            <td colspan="10" class="grand-total-label">Taxable Amount</td>
+                            <td id="gstTaxable">0.00</td>
+                            <td></td>
+                        </tr>
+                    
+                        <tr>
+                            <td colspan="10" class="grand-total-label">
+                                <label for="gstRate">GST Rate(%)</label>
+                                <label class="interstate-label">
+                                    <input type="checkbox" id="isInterState"> Inter-State (IGST)
+                                </label>
+                            </td>
+                            <td>
+                                <input type="number" id="gstRate" value="18.00" class="gst-rate-input" min="0" step="0.01">
+                            </td>
+                            <td></td>
+                        </tr>
+                    
+                        <tr>
+                            <td colspan="10" class="grand-total-label"><b>SGST</b></td>
+                            <td id="sgstAmount">0.00</td>
+                            <td></td>
+                        </tr>
+                    
+                        <tr>
+                            <td colspan="10" class="grand-total-label"><b>CGST</b></td>
+                            <td id="cgstAmount">0.00</td>
+                            <td></td>
+                        </tr>
+                    
+                        <tr>
+                            <td colspan="10" class="grand-total-label"><b>IGST</b></td>
+                            <td id="igstAmount">0.00</td>
+                            <td></td>
+                        </tr>
+                    
+                        <tr>
+                            <td colspan="10" class="grand-total-label"><b>Total GST</b></td>
+                            <td id="totalGST">0.00</td>
+                            <td></td>
+                        </tr>
+                    
+                        <tr>
+                            <td colspan="10" class="grand-total-label"><b>Grand Total (Incl GST)</b></td>
+                            <td id="grandTotalWithGST">0.00</td>
+                            <td><button id="clearTableBtn">🧹</button></td>
+                        </tr>
+                    </tbody>
+                
+                </table>
+            </div>
+        </div>
+
+        <div class="price-table-container">
+
+            <h2>Price Schedule with Commercial Terms and Conditions</h2>
+
+            <table id="priceTable">
+                <tbody id="priceBody">
+                
+                    <!-- ROW 1 (GROUP HEADER WITH ADD BUTTON) -->
+                    <tr class="main-row">
+                        <td class="sn">1</td>
+                        <td contenteditable="true">Quote</td>
+                        <td contenteditable="true"></td>
+                    </tr>
+                
+                    <!-- Sub-rows will be inserted here -->
+                    <tbody id="subRows"></tbody>
+                
+                    <!-- FIXED ROWS 2–15 (NON-ADDABLE) -->
+                    <tr><td class="sn">2</td><td contenteditable="true">P&F</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">3</td><td contenteditable="true">Freight</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">4</td><td contenteditable="true">Boarding & Lodging & Local Conveyance</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">5</td><td contenteditable="true">GST</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">6</td><td contenteditable="true">Payment</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">7</td><td contenteditable="true">Delivery</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">8</td><td contenteditable="true">Our Scope</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">9</td><td contenteditable="true">Client Scope</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">10</td><td contenteditable="true">Validity</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">11</td><td contenteditable="true">Warranty</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">12</td><td contenteditable="true">Inspection/Testing</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">13</td><td contenteditable="true">LD Clause</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">14</td><td contenteditable="true">Price</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">15</td><td contenteditable="true">Liability</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">16</td><td contenteditable="true">Indemnity</td><td contenteditable="true"></td></tr>
+                </tbody>
+            </table>
+        
+            <button id="addSubRowBtn" class="add-row-btn">Add Row 1A, 1B, 1C</button>
+
+        </div>
+
+        <!--Company Info-->
+        <h2>Company Details:</h2>
+        
+        <div class="company-info-box">
+            <table class="info-table">
+                <tr>
+                    <td class="label">Company Name</td>
+                    <td class="colon">:</td>
+                    <td class="value" contenteditable="true">STARTRACK AUTOMATION INDIA PRIVATE LIMITED</td>
+                </tr>
+            
+                <tr>
+                    <td class="label">CIN</td>
+                    <td class="colon">:</td>
+                    <td class="value" contenteditable="true">U72900WB2023PTC260080</td>
+                </tr>
+            
+                <tr>
+                    <td class="label">GSTIN</td>
+                    <td class="colon">:</td>
+                    <td class="value" contenteditable="true">19ABKCS2524B1ZI</td>
+                </tr>
+            
+                <tr>
+                    <td class="label">PAN</td>
+                    <td class="colon">:</td>
+                    <td class="value" contenteditable="true">ABKCS2524B</td>
+                </tr>
+            
+                <tr>
+                    <td class="label">MSME/UDYAM</td>
+                    <td class="colon">:</td>
+                    <td class="value" contenteditable="true">UDYAM-WB-18-0082645</td>
+                </tr>
+            
+                <tr>
+                    <td class="label">BANK NAME</td>
+                    <td class="colon">:</td>
+                    <td class="value" contenteditable="true">ICICI BANK LIMITED</td>
+                </tr>
+            
+                <tr>
+                    <td class="label">BRANCH IFSC</td>
+                    <td class="colon">:</td>
+                    <td class="value" contenteditable="true">ICIC0002665</td>
+                </tr>
+            
+                <tr>
+                    <td class="label">ACCOUNT NO</td>
+                    <td class="colon">:</td>
+                    <td class="value" contenteditable="true">266505000614</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="quote-btn">
+            <button id="generateQuoteBtn">Generate Quotation</button>
+        </div>
+    </div>
+
+    <script src="quote.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</body>
+</html>
