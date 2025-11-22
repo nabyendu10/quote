@@ -12,14 +12,27 @@
     </div>
     <div class="page-container">
         <!-- <h2>...</h2> -->
-        <!--STAIPL logo-->
-        <div class="logo-button">
-            <h2>Select Transport From:</h2>
-            <button id="btnSta">STA</button>
-            <button id="btnStaipl">STAIPL</button>
+        <!--Company Logo Selection-->
+        <div class="logo-selection">
+            <h2>Select Company Logo:</h2>
+            <select id="logoDropdown">
+                <option value="">-- Select Company --</option>
+                <option value="sta">STA</option>
+                <option value="staipl">STAIPL</option>
+            </select>
         </div>
 
         <div id="logoContainer"></div>
+
+        <!--Vendor Selection-->
+        <div class="vendor-selection">
+            <h2>Select Vendor:</h2>
+            <select id="vendorDropdown">
+                <option value="">-- Loading Vendors --</option>
+            </select>
+        </div>
+
+        <div id="vendorContainer"></div>
 
         <!--Offer Type-->
         <h2>Select Offer Type:</h2>
@@ -77,22 +90,21 @@
            </div>
         </div>
 
-        <!--image upload-->
-        <div class="upload-area">
-            <h2>Upload Image:</h2>
-            <input type="file" id="imageUpload" accept="image/*">
-            <h6>(Max size: 2MB)</h6>
-        </div>
-        <div class="preview-area">
-            <img id="imagePreview" style="display:none;">
-        </div>
 
-        <!--Body Container-->
+        <!--Vendor Selection-->
+        <!--Project Description in Details-->
         <div class="body-container">
             <h2>Project Description in Details:</h2>
-            <input type="file" id="fileInput" multiple>
-            <button id="uploadButton">Upload</button>
-            <canvas id="myCanvas"></canvas>
+            <div class="upload-area">
+                <input type="file" id="imageUpload" accept="image/*" multiple>
+                <h6>(Max size: 2MB per image | Multiple files supported)</h6>
+                <button id="clearAllImages" class="clear-btn">Clear All Images</button>
+            </div>
+            <div class="preview-area">
+                <div id="imageContainer" class="image-container">
+                    <!-- Images will be dynamically added here -->
+                </div>
+            </div>
             
             <div class="control">
                 <!--crop image and control-->

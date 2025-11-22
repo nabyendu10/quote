@@ -1,31 +1,206 @@
 document.addEventListener("DOMContentLoaded", function (){
 
-// logo selection
+// ========================================
+// DROPDOWN LOGO SELECTION SYSTEM
+// ========================================
+// Automatically scans assets/sta-logo folder and creates dropdown options
+// Naming Convention: {companyname}-logo.png
 
-document.getElementById("btnSta").addEventListener("click", function() {
-    document.getElementById("logoContainer").innerHTML =
-        '<img src="images/1.png" alt="STA Logo">';
-});
-
-document.getElementById("btnStaipl").addEventListener("click", function() {
-    document.getElementById("logoContainer").innerHTML =
-        '<img src="images/2.png" alt="STAIPL Logo">';
-});
-
-
-//offer type
-
-let offerButtons = document.querySelectorAll(".offerBtn");
-let display = document.getElementById("offerDisplay");
-
-offerButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        offerButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
+function initDropdownLogoSelection() {
+    const dropdown = document.getElementById('logoDropdown');
+    const container = document.getElementById('logoContainer');
+    
+    console.log('Initializing logo selection, dropdown found:', !!dropdown, 'container found:', !!container);
+    
+    if (!dropdown || !container) {
+        console.error('Logo dropdown or container not found');
+        return;
+    }
+    
+    dropdown.addEventListener('change', function() {
+        console.log('Logo dropdown changed to:', this.value);
+        const selectedValue = this.value;
         
-        document.getElementById("offerType").textContent = btn.dataset.offer;
+        if (!selectedValue) {
+            // Clear container if no selection
+            container.innerHTML = '';
+            container.dataset.selectedLogo = '';
+            return;
+        }
+        
+        // Generate image path and display name
+        const imagePath = `assets/sta-logo/${selectedValue}-logo.png`;
+        const displayName = selectedValue.toUpperCase();
+        
+        // Update logo container
+        container.innerHTML = `<img src="${imagePath}" alt="${displayName} Logo">`;
+        
+        // Store selected logo for later use
+        container.dataset.selectedLogo = selectedValue;
+        
+        console.log(`Logo selected: ${displayName}`);
+        
+        // Add error handling for missing images
+        const img = container.querySelector('img');
+        img.onerror = function() {
+            container.innerHTML = `<div style="color: red; padding: 20px; text-align: center;">Logo not found: ${imagePath}</div>`;
+            console.error(`Logo image not found: ${imagePath}`);
+        };
     });
-});
+}
+
+// Initialize dropdown logo selection
+initDropdownLogoSelection();
+
+// Function to get selected logo (for external use)
+function getSelectedLogo() {
+    const container = document.getElementById('logoContainer');
+    return container ? container.dataset.selectedLogo : '';
+}
+
+// Function to programmatically set logo
+function setSelectedLogo(logoName) {
+    const dropdown = document.getElementById('logoDropdown');
+    if (dropdown) {
+        dropdown.value = logoName;
+        dropdown.dispatchEvent(new Event('change'));
+    }
+}
+
+// ========================================
+// VENDOR SELECTION SYSTEM
+// ========================================
+// Dynamically scans assets/vendor-logo folder and populates dropdown
+// Naming Convention: {vendor-name}-logo.png
+
+function initVendorSelection() {
+    const dropdown = document.getElementById('vendorDropdown');
+    const container = document.getElementById('vendorContainer');
+    
+    console.log('Initializing vendor selection, dropdown found:', !!dropdown, 'container found:', !!container);
+    
+    if (!dropdown || !container) {
+        console.error('Vendor dropdown or container not found');
+        return;
+    }
+    
+    // Simulate loading vendor files (in real scenario, you'd fetch from server)
+    loadVendorOptions();
+    
+    dropdown.addEventListener('change', function() {
+        console.log('Vendor dropdown changed to:', this.value);
+        const selectedValue = this.value;
+        
+        if (!selectedValue) {
+            // Clear container if no selection
+            container.innerHTML = '';
+            container.dataset.selectedVendor = '';
+            return;
+        }
+        
+        // Generate image path and display name
+        const imagePath = `assets/vendor-logo/${selectedValue}-logo.png`;
+        const displayName = selectedValue.toUpperCase();
+        
+        // Update vendor container
+        container.innerHTML = `<img src="${imagePath}" alt="${displayName} Logo">`;
+        
+        // Store selected vendor for later use
+        container.dataset.selectedVendor = selectedValue;
+        
+        console.log(`Vendor selected: ${displayName}`);
+        
+        // Add error handling for missing images
+        const img = container.querySelector('img');
+        img.onerror = function() {
+            container.innerHTML = `<div style="color: red; padding: 20px; text-align: center;">Vendor logo not found: ${imagePath}</div>`;
+            console.error(`Vendor logo not found: ${imagePath}`);
+        };
+    });
+}
+
+// Load vendor options dynamically from manifest file
+function loadVendorOptions() {
+    const dropdown = document.getElementById('vendorDropdown');
+    if (!dropdown) return;
+    
+    // Try to load from manifest file first
+    console.log('Fetching vendors manifest...');
+    fetch('assets/vendor-logo/vendors-manifest.json')
+        .then(response => {
+            console.log('Manifest fetch response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Manifest data loaded:', data);
+            populateVendorDropdown(data.vendors);
+        })
+        .catch(error => {
+            console.warn('Vendors manifest not found, using static list:', error);
+            // Fallback to static list
+            const vendors = [
+                {id: 'vendor1', name: 'Tech Solutions Ltd', filename: 'vendor1-logo.png'},
+                {id: 'vendor2', name: 'Global Systems Inc', filename: 'vendor2-logo.png'},
+                {id: 'vendor3', name: 'Advanced Engineering Co', filename: 'vendor3-logo.png'}
+            ];
+            populateVendorDropdown(vendors);
+        });
+}
+
+// Populate vendor dropdown with options
+function populateVendorDropdown(vendors) {
+    const dropdown = document.getElementById('vendorDropdown');
+    if (!dropdown) {
+        console.error('Dropdown not found in populateVendorDropdown');
+        return;
+    }
+    
+    console.log('Populating dropdown with vendors:', vendors);
+    
+    // Clear loading option
+    dropdown.innerHTML = '<option value="">-- Select Vendor --</option>';
+    
+    // Add vendor options
+    vendors.forEach(vendor => {
+        const option = document.createElement('option');
+        option.value = vendor.id;
+        option.textContent = vendor.name;
+        dropdown.appendChild(option);
+        console.log(`Added vendor option: ${vendor.name} (${vendor.id})`);
+    });
+    
+    console.log(`Loaded ${vendors.length} vendor options`);
+}
+
+// Format vendor name for display
+function formatVendorName(vendorName) {
+    return vendorName
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+// Get selected vendor (for external use)
+function getSelectedVendor() {
+    const container = document.getElementById('vendorContainer');
+    return container ? container.dataset.selectedVendor : '';
+}
+
+// Set vendor programmatically
+function setSelectedVendor(vendorName) {
+    const dropdown = document.getElementById('vendorDropdown');
+    if (dropdown) {
+        dropdown.value = vendorName;
+        dropdown.dispatchEvent(new Event('change'));
+    }
+}
+
+// Initialize vendor selection
+initVendorSelection();
+
+
+// Offer type handling - using contenteditable divs
+// No buttons needed as users type directly into offer lines
 
 // offer table
 
@@ -41,42 +216,170 @@ if (addRevisionBtn && revBox) {
     });
 }
 
-//upload image
+// ========================================
+// MULTIPLE IMAGE UPLOAD WITH REORDERING
+// ========================================
+
+let uploadedImages = []; // Store image data
+let imageIdCounter = 0;
 
 document.getElementById("imageUpload").addEventListener("change", function () {
-
-    const file = this.files[0];
-    const preview = document.getElementById("imagePreview");
-
-    if (!file) {
-        preview.style.display = "none";
-        return;
-    }
-
-    // File size check (Max 2MB)
-    if (file.size > 2 * 1024 * 1024) {
-        alert("File is too large! Maximum size is 2MB.");
-        this.value = "";
-        preview.style.display = "none";
-        return;
-    }
-
-    // File type check
-    if (!file.type.startsWith("image/")) {
-        alert("Please upload a valid image file.");
-        this.value = "";
-        preview.style.display = "none";
-        return;
-    }
-
-    // Show preview
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        preview.src = e.target.result;
-        preview.style.display = "block";
-    };
-    reader.readAsDataURL(file);
+    const files = Array.from(this.files);
+    
+    if (files.length === 0) return;
+    
+    files.forEach(file => {
+        // File size check (Max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            alert(`File "${file.name}" is too large! Maximum size is 2MB.`);
+            return;
+        }
+        
+        // File type check
+        if (!file.type.startsWith("image/")) {
+            alert(`File "${file.name}" is not a valid image.`);
+            return;
+        }
+        
+        // Create image object
+        const imageData = {
+            id: ++imageIdCounter,
+            file: file,
+            name: file.name,
+            size: file.size
+        };
+        
+        // Read file and add to array
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            imageData.src = e.target.result;
+            uploadedImages.push(imageData);
+            renderImages();
+        };
+        reader.readAsDataURL(file);
+    });
+    
+    // Clear input for next selection
+    this.value = "";
 });
+
+function renderImages() {
+    const container = document.getElementById("imageContainer");
+    container.innerHTML = "";
+    
+    uploadedImages.forEach((imageData, index) => {
+        const imageCard = document.createElement("div");
+        imageCard.className = "image-card";
+        imageCard.draggable = true;
+        imageCard.dataset.imageId = imageData.id;
+        
+        imageCard.innerHTML = `
+            <div class="image-preview">
+                <img src="${imageData.src}" alt="${imageData.name}">
+            </div>
+            <div class="image-info">
+                <div class="image-name">${imageData.name}</div>
+                <div class="image-size">${(imageData.size / 1024).toFixed(1)} KB</div>
+                <div class="image-position">Position: ${index + 1}</div>
+            </div>
+            <div class="image-controls">
+                <button class="move-btn move-up" ${index === 0 ? 'disabled' : ''}>↑</button>
+                <button class="move-btn move-down" ${index === uploadedImages.length - 1 ? 'disabled' : ''}>↓</button>
+                <button class="remove-btn">✕</button>
+            </div>
+        `;
+        
+        // Add event listeners
+        addImageEventListeners(imageCard, imageData.id, index);
+        container.appendChild(imageCard);
+    });
+    
+    // Update image count display
+    updateImageCount();
+}
+
+function addImageEventListeners(card, imageId, index) {
+    // Remove button
+    card.querySelector('.remove-btn').addEventListener('click', () => {
+        removeImage(imageId);
+    });
+    
+    // Move up button
+    card.querySelector('.move-up').addEventListener('click', () => {
+        moveImage(index, index - 1);
+    });
+    
+    // Move down button
+    card.querySelector('.move-down').addEventListener('click', () => {
+        moveImage(index, index + 1);
+    });
+    
+    // Drag and drop
+    card.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', imageId);
+        card.classList.add('dragging');
+    });
+    
+    card.addEventListener('dragend', () => {
+        card.classList.remove('dragging');
+    });
+    
+    card.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        card.classList.add('drag-over');
+    });
+    
+    card.addEventListener('dragleave', () => {
+        card.classList.remove('drag-over');
+    });
+    
+    card.addEventListener('drop', (e) => {
+        e.preventDefault();
+        card.classList.remove('drag-over');
+        
+        const draggedId = parseInt(e.dataTransfer.getData('text/plain'));
+        const draggedIndex = uploadedImages.findIndex(img => img.id === draggedId);
+        const targetIndex = index;
+        
+        if (draggedIndex !== targetIndex) {
+            moveImage(draggedIndex, targetIndex);
+        }
+    });
+}
+
+function removeImage(imageId) {
+    uploadedImages = uploadedImages.filter(img => img.id !== imageId);
+    renderImages();
+}
+
+function moveImage(fromIndex, toIndex) {
+    if (toIndex < 0 || toIndex >= uploadedImages.length) return;
+    
+    const [movedImage] = uploadedImages.splice(fromIndex, 1);
+    uploadedImages.splice(toIndex, 0, movedImage);
+    renderImages();
+}
+
+function updateImageCount() {
+    const uploadArea = document.querySelector('.upload-area h2');
+    const count = uploadedImages.length;
+    uploadArea.textContent = `Upload Images: ${count > 0 ? `(${count} selected)` : ''}`;
+}
+
+// Clear all images
+document.getElementById('clearAllImages').addEventListener('click', () => {
+    if (uploadedImages.length === 0) return;
+    
+    if (confirm(`Remove all ${uploadedImages.length} images?`)) {
+        uploadedImages = [];
+        renderImages();
+    }
+});
+
+// Helper function to get images for quotation generation
+function getUploadedImages() {
+    return uploadedImages.map(img => img.src);
+}
 
 
 // Add Revision Button
@@ -299,55 +602,27 @@ function renumberSubRows() {
     });
 }
 
-// body image uplaod 
+// Image upload is now handled by the multiple image upload system above
+// Canvas functionality removed as images are handled differently
 
-const canvas = document.getElementById('myCanvas');
-const fileInput = document.getElementById('fileInput');
-const uploadButton = document.getElementById('uploadButton');
-
-uploadButton.addEventListener('click', () => {
-    const files = fileInput.files;
-
-    if (files.length > 0) {
-        const file = files[0]; // Get the first file
-        const reader = new FileReader();
-
-        reader.onload = (e) => {
-            // Image data is now in e.target.result
-            const img = new Image();
-            img.onload = () => {
-                // Draw the image onto the canvas
-                canvas.width = img.width;
-                canvas.height = img.height;
-                canvas.getContext('2d').drawImage(img, 0, 0);
-            };
-            img.src = e.target.result;
-        };
-
-        reader.readAsDataURL(file);
-    }
-});
-
-
-
-
-
-
-
-
-
-// Generate QUotation
-
+// ========================================
+// GENERATE QUOTATION
+// ========================================
 document.getElementById("generateQuoteBtn").addEventListener("click", async () => {
-  // helpers
-  const escape = s => (s||'').toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  try {
+    console.log("Generate Quotation button clicked!");
+    
+    // helpers
+    const escape = s => (s||'').toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
-  // get small logo src (from #logoContainer img if user selected)
+  // get small logo src (from dropdown selection)
   function getSmallLogoSrc(){
-    const img = document.querySelector('#logoContainer img');
-    if (img && img.src) return img.src;
-    // fallback relative path to your images folder
-    return 'images/1.png';
+    const selectedLogo = getSelectedLogo();
+    if (selectedLogo) {
+      return `assets/sta-logo/${selectedLogo}-logo.png`;
+    }
+    // fallback to first available logo
+    return 'assets/sta-logo/sta-logo.png';
   }
 
   // Read header right lines (fixed as per your instruction)
@@ -365,13 +640,21 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   const projectName = (document.getElementById('projectName') && document.getElementById('projectName').value) ? document.getElementById('projectName').value : '';
   const quoteDate = (document.getElementById('quoteDate') && document.getElementById('quoteDate').value) ? document.getElementById('quoteDate').value : '';
 
-  // Offer text & Page 2 center image
-  const offerText = document.getElementById('offerDisplay') ? document.getElementById('offerDisplay').textContent.trim() : '';
-  const page2ImageSrc = (document.getElementById('imagePreview') && document.getElementById('imagePreview').src) ? document.getElementById('imagePreview').src : '';
-
-  // Project images (fileInput) - object URLs
-  const projectFiles = Array.from(document.getElementById('fileInput').files || []);
-  const projectURLs = projectFiles.map(f => URL.createObjectURL(f));
+  // Offer text from offer lines
+  const offerLines = [
+    document.getElementById('line1')?.textContent?.trim() || '',
+    document.getElementById('line2')?.textContent?.trim() || '',
+    document.getElementById('line3')?.textContent?.trim() || '',
+    document.getElementById('line4')?.textContent?.trim() || ''
+  ].filter(line => line.length > 0);
+  const offerText = offerLines.join(' - ');
+  
+  // Get uploaded project images
+  const uploadedImageSrcs = getUploadedImages(); // Get array of image sources
+  
+  console.log("Offer text:", offerText);
+  console.log("Uploaded images:", uploadedImageSrcs.length);
+  console.log("Selected logo:", getSelectedLogo());
 
   // BUILD CLEAN ITEM TABLE DATA (sanitize)
   // We will read rows from your visible table, but ignore any buttons and contenteditable attributes.
@@ -460,7 +743,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
       </div>
       <div class="content">
         <div class="offer-title">${escape(offerText)}</div>
-        <div class="center-img">${ page2ImageSrc ? `<img src="${page2ImageSrc}" alt="center">` : `<div style="color:#888">No Image</div>` }</div>
+        <div class="center-img">${ uploadedImageSrcs.length > 0 ? `<img src="${uploadedImageSrcs[0]}" alt="main-image">` : `<div style="color:#888">No Image</div>` }</div>
       </div>
       <div class="footer">
         <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
@@ -470,8 +753,9 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     </div>
   `;
 
-  // PROJECT IMAGE PAGES (one page per project image)
-  projectURLs.forEach((url, idx)=>{
+  // UPLOADED IMAGE PAGES (one page per uploaded image, starting from second image if multiple)
+  const additionalImages = uploadedImageSrcs.slice(1); // Skip first image (used in page 2)
+  additionalImages.forEach((imageSrc, idx)=>{
     pagesHtml += `
       <div class="a4page page-project">
         <div class="header">
@@ -480,7 +764,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
           <div class="right">${headerRightHTML}</div>
         </div>
         <div class="content">
-          <div class="img-block"><img src="${url}" alt="project-${idx}"></div>
+          <div class="img-block"><img src="${imageSrc}" alt="uploaded-image-${idx + 2}"></div>
         </div>
         <div class="footer">
           <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
@@ -492,8 +776,8 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   });
 
   // ITEM TABLE PAGES (we already created tablePagesHtml chunks)
-  // Item pages start after page1,page2 and project images
-  const itemStartPageIndex = 3 + projectURLs.length;
+  // Item pages start after page1,page2 and uploaded images (excluding first image used in page 2)
+  const itemStartPageIndex = 3 + additionalImages.length;
   tablePagesHtml.forEach((tblHtml, idx)=>{
     const pageNumber = itemStartPageIndex + idx;
     pagesHtml += `
@@ -557,8 +841,8 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     </div>
   `;
 
-  // Now open preview.html in a new window and write the assembled HTML into it.
-  const previewUrl = 'preview.html';
+  // Now open quote-preview.html in a new window and write the assembled HTML into it.
+  const previewUrl = 'quote-preview.html';
   const w = window.open(previewUrl, '_blank');
 
   // wait until preview window can be written into
@@ -569,7 +853,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
       doc.write(`
         <!doctype html><html><head>
         <meta charset="utf-8"><title>Preview</title>
-        <link rel="stylesheet" href="preview.css">
+        <link rel="stylesheet" href="quote-preview.css">
         <link rel="stylesheet" href="quote.css">
         </head>
         <body>
@@ -636,5 +920,8 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   }
   writeWhenReady();
 
-}); // end generate button listener
-// ---------- END: Clean Preview + PDF flow ----------
+  } catch (error) {
+    console.error("Error generating quotation:", error);
+    alert("Error generating quotation: " + error.message + ". Check console for details.");
+  }
+});
