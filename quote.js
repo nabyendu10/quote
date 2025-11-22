@@ -1,3 +1,40 @@
+// Global variables and functions
+let uploadedImages = []; // Store image data
+let imageIdCounter = 0;
+
+// Helper function to get images for quotation generation
+function getUploadedImages() {
+    return uploadedImages.map(img => img.src);
+}
+
+// Logo selection functions
+function getSelectedLogo() {
+    const container = document.getElementById('logoContainer');
+    return container ? container.dataset.selectedLogo : '';
+}
+
+function setSelectedLogo(logoName) {
+    const dropdown = document.getElementById('logoDropdown');
+    if (dropdown) {
+        dropdown.value = logoName;
+        dropdown.dispatchEvent(new Event('change'));
+    }
+}
+
+// Vendor selection functions
+function getSelectedVendor() {
+    const container = document.getElementById('vendorContainer');
+    return container ? container.dataset.selectedVendor : '';
+}
+
+function setSelectedVendor(vendorName) {
+    const dropdown = document.getElementById('vendorDropdown');
+    if (dropdown) {
+        dropdown.value = vendorName;
+        dropdown.dispatchEvent(new Event('change'));
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function (){
 
 // ========================================
@@ -51,21 +88,6 @@ function initDropdownLogoSelection() {
 
 // Initialize dropdown logo selection
 initDropdownLogoSelection();
-
-// Function to get selected logo (for external use)
-function getSelectedLogo() {
-    const container = document.getElementById('logoContainer');
-    return container ? container.dataset.selectedLogo : '';
-}
-
-// Function to programmatically set logo
-function setSelectedLogo(logoName) {
-    const dropdown = document.getElementById('logoDropdown');
-    if (dropdown) {
-        dropdown.value = logoName;
-        dropdown.dispatchEvent(new Event('change'));
-    }
-}
 
 // ========================================
 // VENDOR SELECTION SYSTEM
@@ -180,21 +202,6 @@ function formatVendorName(vendorName) {
         .join(' ');
 }
 
-// Get selected vendor (for external use)
-function getSelectedVendor() {
-    const container = document.getElementById('vendorContainer');
-    return container ? container.dataset.selectedVendor : '';
-}
-
-// Set vendor programmatically
-function setSelectedVendor(vendorName) {
-    const dropdown = document.getElementById('vendorDropdown');
-    if (dropdown) {
-        dropdown.value = vendorName;
-        dropdown.dispatchEvent(new Event('change'));
-    }
-}
-
 // Initialize vendor selection
 initVendorSelection();
 
@@ -219,9 +226,6 @@ if (addRevisionBtn && revBox) {
 // ========================================
 // MULTIPLE IMAGE UPLOAD WITH REORDERING
 // ========================================
-
-let uploadedImages = []; // Store image data
-let imageIdCounter = 0;
 
 document.getElementById("imageUpload").addEventListener("change", function () {
     const files = Array.from(this.files);
@@ -375,11 +379,6 @@ document.getElementById('clearAllImages').addEventListener('click', () => {
         renderImages();
     }
 });
-
-// Helper function to get images for quotation generation
-function getUploadedImages() {
-    return uploadedImages.map(img => img.src);
-}
 
 
 // Add Revision Button
