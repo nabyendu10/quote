@@ -648,6 +648,18 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   ].filter(line => line.length > 0);
   const offerText = offerLines.join(' - ');
   
+  // Format offer lines for better display
+  function formatOfferLines() {
+    const lines = offerLines.map((line, index) => {
+      const labels = ['Offer Type', 'Type of Work', 'Description', 'Company Name'];
+      return `<div class="offer-line-item">
+        <span class="offer-label">${labels[index] || 'Details'}:</span>
+        <span class="offer-value">${escape(line)}</span>
+      </div>`;
+    });
+    return lines.join('');
+  }
+  
   // Get uploaded project images
   const uploadedImageSrcs = getUploadedImages(); // Get array of image sources
   
@@ -714,9 +726,32 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     priceHtml = `<div>(No price schedule)</div>`;
   }
 
-  // COMPANY DETAILS (clean)
-  const companyNode = document.querySelector('.company-info-box');
-  const companyHtml = companyNode ? `<div style="font-size:12px;line-height:1.4">${escape(companyNode.textContent.trim())}</div>` : '';
+  // COMPANY DETAILS (clean table format)
+  function formatCompanyDetails() {
+    const companyNode = document.querySelector('.company-info-box');
+    if (!companyNode) return '<div>No company details available</div>';
+    
+    const rows = Array.from(companyNode.querySelectorAll('tr'));
+    const tableRows = rows.map(row => {
+      const cells = Array.from(row.querySelectorAll('td'));
+      if (cells.length >= 3) {
+        const label = cells[0].textContent.trim();
+        const value = cells[2].textContent.trim();
+        return `<tr>
+          <td class="company-label">${escape(label)}</td>
+          <td class="company-colon">:</td>
+          <td class="company-value">${escape(value)}</td>
+        </tr>`;
+      }
+      return '';
+    }).filter(row => row.length > 0).join('');
+    
+    return `<table class="company-details-table">
+      <tbody>${tableRows}</tbody>
+    </table>`;
+  }
+  
+  const companyHtml = formatCompanyDetails();
 
   // Get project details content
   function getProjectDetailsContent() {
@@ -772,7 +807,9 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
       <div class="content">
         <div class="offer-section">
           <h2>Offer Information</h2>
-          <div class="offer-title">${escape(offerText)}</div>
+          <div class="offer-details">
+            ${formatOfferLines()}
+          </div>
         </div>
         ${projectDetailsContent}
       </div>
@@ -865,7 +902,9 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
       <div class="content">
         <div class="company-section">
           <h2>Company Details</h2>
-          ${companyHtml}
+          <div class="company-details-container">
+            ${companyHtml}
+          </div>
         </div>
       </div>
       <div class="footer">

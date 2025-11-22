@@ -70,7 +70,13 @@ body{font-family:var(--font); background:#efefef; margin:14px; color:#111}
 /* Offer details page (Page 2) */
 .page-offer-details .offer-section{margin-bottom:8mm}
 .page-offer-details .offer-section h2{font-size:18px;margin-bottom:4mm;color:#2c5530;border-bottom:2px solid #2c5530;padding-bottom:2mm}
-.page-offer-details .offer-title{font-size:16px;line-height:1.4;margin-bottom:6mm;padding:4mm;background:#f9f9f9;border-left:4px solid #2c5530}
+.page-offer-details .offer-details{background:#f9f9f9;padding:4mm;border-left:4px solid #2c5530;border-radius:2mm}
+
+/* Offer line items styling */
+.offer-line-item{display:flex;margin-bottom:3mm;padding:2mm 0;border-bottom:1px solid #e0e0e0}
+.offer-line-item:last-child{border-bottom:none;margin-bottom:0}
+.offer-label{font-weight:bold;color:#2c5530;width:25%;flex-shrink:0;font-size:13px}
+.offer-value{color:#333;font-size:13px;line-height:1.3;flex:1;margin-left:2mm}
 
 .page-offer-details .project-details{display:flex;gap:6mm;height:auto}
 .page-offer-details .project-left, .page-offer-details .project-right{flex:1}
@@ -134,6 +140,14 @@ h2 {
 /* Company details page */
 .page-company-details .company-section h2{font-size:18px;margin-bottom:6mm;color:#2c5530;border-bottom:2px solid #2c5530;padding-bottom:2mm}
 .page-company-details .content{overflow:auto;font-size:12px;line-height:1.45}
+
+/* Company details table styling */
+.company-details-container{background:#f9f9f9;padding:4mm;border-radius:2mm}
+.company-details-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:2mm;overflow:hidden;box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+.company-details-table td{padding:8px 12px;border:1px solid #ddd;vertical-align:top}
+.company-label{font-weight:bold;color:#2c5530;background:#f8f9fa;width:30%;text-align:right}
+.company-colon{width:5%;text-align:center;color:#666;background:#f8f9fa}
+.company-value{color:#333;background:#fff}
 
 /* General page full text (fallback) */
 .page-fulltext .content{overflow:auto;font-size:12px;line-height:1.45}
