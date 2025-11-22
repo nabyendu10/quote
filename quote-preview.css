@@ -67,26 +67,75 @@ body{font-family:var(--font); background:#efefef; margin:14px; color:#111}
 .page-logo-only .content{display:flex;align-items:center;justify-content:center}
 .page-logo-only .content img{max-width:70%;max-height:70%;object-fit:contain}
 
-/* Offer page */
-.page-offer .offer-title{font-size:20px;text-align:center;margin-bottom:6mm;font-weight:700}
-.page-offer .center-img{display:flex;align-items:center;justify-content:center;height:150mm}
-.page-offer .center-img img{max-width:100%;max-height:100%;object-fit:contain}
+/* Offer details page (Page 2) */
+.page-offer-details .offer-section{margin-bottom:8mm}
+.page-offer-details .offer-section h2{font-size:18px;margin-bottom:4mm;color:#2c5530;border-bottom:2px solid #2c5530;padding-bottom:2mm}
+.page-offer-details .offer-title{font-size:16px;line-height:1.4;margin-bottom:6mm;padding:4mm;background:#f9f9f9;border-left:4px solid #2c5530}
+
+.page-offer-details .project-details{display:flex;gap:6mm;height:auto}
+.page-offer-details .project-left, .page-offer-details .project-right{flex:1}
+.page-offer-details .project-left h3, .page-offer-details .project-right h3{font-size:14px;margin-bottom:3mm;color:#2c5530;border-bottom:1px solid #ddd;padding-bottom:2mm}
+.page-offer-details .project-content{font-size:12px;line-height:1.4;white-space:pre-line}
 
 /* Project pages (single image full focus) */
-.page-project .img-block{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
-.page-project .img-block img{max-width:100%;max-height:100%;object-fit:contain}
+.page-project .img-block{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#fafafa;border:1px solid #eee}
+.page-project .img-block img{max-width:98%;max-height:98%;object-fit:contain;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
 
 /* Clean table styling */
-.clean-table{width:100%;border-collapse:collapse;font-size:12px}
-.clean-table th,.clean-table td{border:1px solid #bfbfbf;padding:6px 8px;vertical-align:top}
+.clean-table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:4mm}
+.clean-table th,.clean-table td{border:1px solid #bfbfbf;padding:4px 6px;vertical-align:top;word-wrap:break-word}
 .clean-table thead{background:#f7f7f7;font-weight:700;display:table-header-group}
+.clean-table th{font-size:10px;text-align:center;background:#e8f4fd}
+
+/* Table page specific styling */
+.page-table .content{padding:4mm var(--gutter)}
+.page-table .clean-table{height:auto;max-height:100%}
 
 /* ensure no interactive controls show */
 .clean-table button,
 .clean-table input,
 .clean-table textarea { display:none !important; }
 
-/* page full text (price schedule / company details) */
+/* Section headers styling */
+h2 {
+  margin-top: 0;
+  margin-bottom: 4mm;
+  font-size: 16px;
+  color: #2c5530;
+}
+
+/* Content spacing improvements */
+.content > div:not(:last-child) {
+  margin-bottom: 6mm;
+}
+
+/* Logo page improvements */
+.page-logo-only .content {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* Footer improvements */
+.footer div {
+  text-align: center;
+  color: #666;
+}
+
+/* Header center text styling */
+.header .center {
+  font-size: 16px;
+  color: #2c5530;
+  font-weight: bold;
+}
+
+/* Price schedule page */
+.page-price-schedule .price-section h2{font-size:18px;margin-bottom:6mm;color:#2c5530;border-bottom:2px solid #2c5530;padding-bottom:2mm}
+.page-price-schedule .content{overflow:auto;font-size:12px;line-height:1.45}
+
+/* Company details page */
+.page-company-details .company-section h2{font-size:18px;margin-bottom:6mm;color:#2c5530;border-bottom:2px solid #2c5530;padding-bottom:2mm}
+.page-company-details .content{overflow:auto;font-size:12px;line-height:1.45}
+
+/* General page full text (fallback) */
 .page-fulltext .content{overflow:auto;font-size:12px;line-height:1.45}
 
 /* print rules */

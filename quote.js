@@ -718,72 +718,102 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   const companyNode = document.querySelector('.company-info-box');
   const companyHtml = companyNode ? `<div style="font-size:12px;line-height:1.4">${escape(companyNode.textContent.trim())}</div>` : '';
 
+  // Get project details content
+  function getProjectDetailsContent() {
+    const projectDetailsNode = document.querySelector('.table-box');
+    let projectDetailsHtml = '';
+    if (projectDetailsNode) {
+      // Extract and clean project details
+      const rows = Array.from(projectDetailsNode.querySelectorAll('.row .cell'));
+      const leftContent = rows[0] ? rows[0].textContent.trim() : '';
+      const rightContent = rows[1] ? rows[1].textContent.trim() : '';
+      
+      projectDetailsHtml = `
+        <div class="project-details">
+          <div class="project-left">
+            <h3>Project Information</h3>
+            <div class="project-content">${escape(leftContent)}</div>
+          </div>
+          <div class="project-right">
+            <h3>Offer Details</h3>
+            <div class="project-content">${escape(rightContent)}</div>
+          </div>
+        </div>
+      `;
+    }
+    return projectDetailsHtml;
+  }
+
   // Build pages HTML string
   let pagesHtml = '';
+  let pageCounter = 1;
 
-  // PAGE 1 - big logo only (centered)
+  // PAGE 1 - Company logo only (centered)
   pagesHtml += `
     <div class="a4page page-logo-only">
       <div class="header" style="visibility:hidden"></div>
       <div class="content">
-        <img src="${getSmallLogoSrc()}" alt="logo">
+        <img src="${getSmallLogoSrc()}" alt="Company Logo">
       </div>
       <div class="footer" style="visibility:hidden"></div>
     </div>
   `;
+  pageCounter++;
 
-  // PAGE 2 - offer + center image + header/footer
+  // PAGE 2 - Offer type information and project details
+  const projectDetailsContent = getProjectDetailsContent();
   pagesHtml += `
-    <div class="a4page page-offer">
+    <div class="a4page page-offer-details">
       <div class="header">
         <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-        <div class="center">Quotation</div>
+        <div class="center">Quotation Details</div>
         <div class="right">${headerRightHTML}</div>
       </div>
       <div class="content">
-        <div class="offer-title">${escape(offerText)}</div>
-        <div class="center-img">${ uploadedImageSrcs.length > 0 ? `<img src="${uploadedImageSrcs[0]}" alt="main-image">` : `<div style="color:#888">No Image</div>` }</div>
+        <div class="offer-section">
+          <h2>Offer Information</h2>
+          <div class="offer-title">${escape(offerText)}</div>
+        </div>
+        ${projectDetailsContent}
       </div>
       <div class="footer">
         <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
         <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Rev No: ${escape(revNo)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-        <div>Page 2 / TOTAL</div>
+        <div>Page ${pageCounter} / TOTAL</div>
       </div>
     </div>
   `;
+  pageCounter++;
 
-  // UPLOADED IMAGE PAGES (one page per uploaded image, starting from second image if multiple)
-  const additionalImages = uploadedImageSrcs.slice(1); // Skip first image (used in page 2)
-  additionalImages.forEach((imageSrc, idx)=>{
+  // PROJECT DESCRIPTION IMAGE PAGES (one page per uploaded image - full page each)
+  uploadedImageSrcs.forEach((imageSrc, idx)=>{
     pagesHtml += `
       <div class="a4page page-project">
         <div class="header">
           <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-          <div class="center">Project Description</div>
+          <div class="center">Project Description - Image ${idx + 1}</div>
           <div class="right">${headerRightHTML}</div>
         </div>
         <div class="content">
-          <div class="img-block"><img src="${imageSrc}" alt="uploaded-image-${idx + 2}"></div>
+          <div class="img-block"><img src="${imageSrc}" alt="project-image-${idx + 1}"></div>
         </div>
         <div class="footer">
           <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
           <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-          <div>Page ${3 + idx} / TOTAL</div>
+          <div>Page ${pageCounter} / TOTAL</div>
         </div>
       </div>
     `;
+    pageCounter++;
   });
 
-  // ITEM TABLE PAGES (we already created tablePagesHtml chunks)
-  // Item pages start after page1,page2 and uploaded images (excluding first image used in page 2)
-  const itemStartPageIndex = 3 + additionalImages.length;
+  // ITEM TABLE PAGES (each section on separate pages)
   tablePagesHtml.forEach((tblHtml, idx)=>{
-    const pageNumber = itemStartPageIndex + idx;
     pagesHtml += `
       <div class="a4page page-table">
         <div class="header">
           <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-          <div class="center">Item List</div>
+          <div class="center">Item List ${tablePagesHtml.length > 1 ? `(Page ${idx + 1} of ${tablePagesHtml.length})` : ''}</div>
           <div class="right">${headerRightHTML}</div>
         </div>
         <div class="content">
@@ -794,48 +824,54 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
         <div class="footer">
           <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
           <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-          <div>Page ${pageNumber} / TOTAL</div>
+          <div>Page ${pageCounter} / TOTAL</div>
         </div>
       </div>
     `;
+    pageCounter++;
   });
 
-  // Price schedule page (single)
-  const pricePageIndex = itemStartPageIndex + tablePagesHtml.length;
+  // PRICE SCHEDULE & TERMS PAGE (dedicated page)
   pagesHtml += `
-    <div class="a4page page-fulltext">
+    <div class="a4page page-price-schedule">
       <div class="header">
         <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-        <div class="center">Price Schedule & Terms</div>
+        <div class="center">Price Schedule & Commercial Terms</div>
         <div class="right">${headerRightHTML}</div>
       </div>
       <div class="content">
-        ${priceHtml}
+        <div class="price-section">
+          <h2>Commercial Terms and Conditions</h2>
+          ${priceHtml}
+        </div>
       </div>
       <div class="footer">
         <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
         <div>Project: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-        <div>Page ${pricePageIndex} / TOTAL</div>
+        <div>Page ${pageCounter} / TOTAL</div>
       </div>
     </div>
   `;
+  pageCounter++;
 
-  // Company details page (final)
-  const companyPageIndex = pricePageIndex + 1;
+  // COMPANY DETAILS PAGE (dedicated page)
   pagesHtml += `
-    <div class="a4page page-fulltext">
+    <div class="a4page page-company-details">
       <div class="header">
         <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-        <div class="center">Company Details</div>
+        <div class="center">Company Information</div>
         <div class="right">${headerRightHTML}</div>
       </div>
       <div class="content">
-        ${companyHtml}
+        <div class="company-section">
+          <h2>Company Details</h2>
+          ${companyHtml}
+        </div>
       </div>
       <div class="footer">
         <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
         <div>Project: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-        <div>Page ${companyPageIndex} / TOTAL</div>
+        <div>Page ${pageCounter} / TOTAL</div>
       </div>
     </div>
   `;
@@ -877,10 +913,10 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
               pages.forEach((p, idx)=>{
                 // replace any "TOTAL" placeholders in footers
                 const foot = p.querySelector('.footer');
-                if (foot) foot.innerHTML = foot.innerHTML.replace('/ TOTAL','/ ' + total);
-                // also replace Page ... if they contain 'Page X / TOTAL' template
                 if (foot) {
-                  foot.innerHTML = foot.innerHTML.replace(/Page \\s*(\\d+)\\s*\\/\\s*TOTAL/, 'Page ' + (idx+1) + ' / ' + total);
+                  foot.innerHTML = foot.innerHTML.replace('/ TOTAL','/ ' + total);
+                  // also replace Page ... if they contain 'Page X / TOTAL' template
+                  foot.innerHTML = foot.innerHTML.replace(/Page\\s*(\\d+)\\s*\\/\\s*TOTAL/g, 'Page ' + (idx+1) + ' / ' + total);
                 }
               });
 
