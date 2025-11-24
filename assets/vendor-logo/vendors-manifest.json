@@ -1,19 +1,14 @@
 {
   "vendors": [
     {
-      "id": "vendor1",
-      "name": "Tech Solutions Ltd",
-      "filename": "vendor1-logo.png"
+      "id": "rockwell-automation",
+      "name": "Rockwell Automation",
+      "filename": "rockwell-automation-logo.png"
     },
     {
-      "id": "vendor2", 
-      "name": "Global Systems Inc",
-      "filename": "vendor2-logo.png"
-    },
-    {
-      "id": "vendor3",
-      "name": "Advanced Engineering Co",
-      "filename": "vendor3-logo.png"
+      "id": "other",
+      "name": "Other (Upload Custom Logo)",
+      "filename": null
     }
   ]
 }

@@ -112,17 +112,35 @@ function initVendorSelection() {
     dropdown.addEventListener('change', function() {
         console.log('Vendor dropdown changed to:', this.value);
         const selectedValue = this.value;
+        const customUploadSection = document.getElementById('customVendorUpload');
         
         if (!selectedValue) {
             // Clear container if no selection
             container.innerHTML = '';
             container.dataset.selectedVendor = '';
+            if (customUploadSection) customUploadSection.style.display = 'none';
             return;
+        }
+        
+        // Check if 'Other' option is selected
+        if (selectedValue === 'other') {
+            // Show custom upload section
+            if (customUploadSection) {
+                customUploadSection.style.display = 'block';
+            }
+            container.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">Please upload a custom vendor logo</div>';
+            container.dataset.selectedVendor = 'custom';
+            return;
+        }
+        
+        // Hide custom upload section for predefined vendors
+        if (customUploadSection) {
+            customUploadSection.style.display = 'none';
         }
         
         // Generate image path and display name
         const imagePath = `assets/vendor-logo/${selectedValue}-logo.png`;
-        const displayName = selectedValue.toUpperCase();
+        const displayName = selectedValue.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         
         // Update vendor container
         container.innerHTML = `<img src="${imagePath}" alt="${displayName} Logo">`;
@@ -161,9 +179,8 @@ function loadVendorOptions() {
             console.warn('Vendors manifest not found, using static list:', error);
             // Fallback to static list
             const vendors = [
-                {id: 'vendor1', name: 'Tech Solutions Ltd', filename: 'vendor1-logo.png'},
-                {id: 'vendor2', name: 'Global Systems Inc', filename: 'vendor2-logo.png'},
-                {id: 'vendor3', name: 'Advanced Engineering Co', filename: 'vendor3-logo.png'}
+                {id: 'rockwell-automation', name: 'Rockwell Automation', filename: 'rockwell-automation-logo.png'},
+                {id: 'other', name: 'Other (Upload Custom Logo)', filename: null}
             ];
             populateVendorDropdown(vendors);
         });
@@ -204,6 +221,45 @@ function formatVendorName(vendorName) {
 
 // Initialize vendor selection
 initVendorSelection();
+
+// Handle custom vendor logo upload
+const uploadCustomVendorBtn = document.getElementById('uploadCustomVendorBtn');
+const customVendorLogoInput = document.getElementById('customVendorLogo');
+const vendorContainer = document.getElementById('vendorContainer');
+
+if (uploadCustomVendorBtn && customVendorLogoInput && vendorContainer) {
+    uploadCustomVendorBtn.addEventListener('click', function() {
+        const file = customVendorLogoInput.files[0];
+        
+        if (!file) {
+            alert('Please select a logo file first');
+            return;
+        }
+        
+        // Validate file size (2MB max)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('File size exceeds 2MB. Please choose a smaller file.');
+            return;
+        }
+        
+        // Validate file type
+        const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+        if (!validTypes.includes(file.type)) {
+            alert('Invalid file type. Please upload PNG, JPG, or SVG files only.');
+            return;
+        }
+        
+        // Read and display the uploaded image
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            vendorContainer.innerHTML = `<img src="${e.target.result}" alt="Custom Vendor Logo">`;
+            vendorContainer.dataset.selectedVendor = 'custom';
+            vendorContainer.dataset.customLogo = e.target.result;
+            console.log('Custom vendor logo uploaded successfully');
+        };
+        reader.readAsDataURL(file);
+    });
+}
 
 
 // Offer type handling - using contenteditable divs

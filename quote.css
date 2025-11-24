@@ -66,7 +66,7 @@
 #vendorDropdown {
     padding: 12px 20px;
     font-size: 16px;
-    border: 2px solid #28a745;
+    border: 2px solid #111;
     border-radius: 8px;
     background-color: white;
     color: #333;
@@ -76,13 +76,13 @@
 }
 
 #vendorDropdown:hover {
-    border-color: #218838;
+    border-color: #111;
     box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
 }
 
 #vendorDropdown:focus {
     outline: none;
-    border-color: #218838;
+    border-color: #111;
     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
 }
 
@@ -91,11 +91,57 @@
     font-size: 16px;
 }
 
+/* Custom Vendor Upload Section */
+#customVendorUpload {
+    width: 700px;
+    display: none;
+    margin: 15px auto 0 auto;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #111;
+}
+
+#customVendorLogo {
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#uploadCustomVendorBtn {
+    padding: 10px 20px;
+    background-color: #111
+    ;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#uploadCustomVendorBtn:hover {
+    background-color: #111;
+}
+
+#uploadCustomVendorBtn:active {
+    background-color: #111;
+}
+
+#customVendorUpload p {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
 #vendorContainer {
-    width: 600px;
+    width: 500px;
     height: 400px;
     padding: 8px;
-    border: 2px solid #28a745;
+    border: 2px solid #111;
     margin: 20px auto;
     display: flex;
     justify-content: center;
@@ -395,8 +441,6 @@ button {
 
 .remove-btn:hover {
     background-color: #c82333;
-}
-    object-fit: cover;
 }
 
 

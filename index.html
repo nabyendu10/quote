@@ -15,7 +15,7 @@
         <!--Company Logo Selection-->
         <div class="logo-selection">
             <h2>Select Company Logo:</h2>
-            <select id="logoDropdown">
+            <select id="logoDropdown" title="Select Company Logo">
                 <option value="">-- Select Company --</option>
                 <option value="sta">STA</option>
                 <option value="staipl">STAIPL</option>
@@ -30,7 +30,7 @@
         <div class="offer-display-box">
 
             <div id="line1" class="offer-line" contenteditable="true" data-placeholder="Write Offer Type"></div>
-            <div id="line2" class="offer-line" contenteditable="true" data-placeholder="Type of Work (Example: HVAC SYSTEM)"></div>
+            <div id="line2" class="offer-line" contenteditable="true" data-placeholder="Description of Work (Example: HVAC SYSTEM)"></div>
             <div id="line3" class="offer-line" contenteditable="true" data-placeholder="Write Description"></div>
             <div id="line4" class="offer-line" contenteditable="true" data-placeholder="Company Name"></div>
             <div id="line5" class="offer-line" contenteditable="true" data-placeholder="Address"></div>
@@ -85,9 +85,16 @@
         <!--Vendor Selection-->
         <div class="vendor-selection">
             <h2>Select Vendor:</h2>
-            <select id="vendorDropdown">
+            <select id="vendorDropdown" title="Select Vendor">
                 <option value="">-- Loading Vendors --</option>
             </select>
+            
+            <!-- Custom Logo Upload Section -->
+            <div id="customVendorUpload">
+                <input type="file" id="customVendorLogo" accept="image/*" title="Upload Custom Vendor Logo">
+                <button id="uploadCustomVendorBtn">Upload Custom Vendor Logo</button>
+                <p>Max size: 2MB | Supported formats: PNG, JPG, SVG</p>
+            </div>
         </div>
 
         <div id="vendorContainer"></div>
@@ -97,7 +104,7 @@
         <div class="body-container">
             <h2>Project Description in Details:</h2>
             <div class="upload-area">
-                <input type="file" id="imageUpload" accept="image/*" multiple>
+                <input type="file" id="imageUpload" accept="image/*" multiple title="Upload project images">
                 <h6>(Max size: 2MB per image | Multiple files supported)</h6>
                 <button id="clearAllImages" class="clear-btn">Clear All Images</button>
             </div>
@@ -218,39 +225,37 @@
             </div>
         </div>
 
+        <h2>Price Schedule with Commercial Terms and Conditions</h2>
         <div class="price-table-container">
-
-            <h2>Price Schedule with Commercial Terms and Conditions</h2>
-
             <table id="priceTable">
                 <tbody id="priceBody">
                 
                     <!-- ROW 1 (GROUP HEADER WITH ADD BUTTON) -->
                     <tr class="main-row">
                         <td class="sn">1</td>
-                        <td contenteditable="true">Quote</td>
-                        <td contenteditable="true"></td>
+                        <td contenteditable="true"><b>Quote</b></td>
+                        <td contenteditable="true"><b>INR:</b></td>
                     </tr>
                 
                     <!-- Sub-rows will be inserted here -->
                     <tbody id="subRows"></tbody>
                 
                     <!-- FIXED ROWS 2–15 (NON-ADDABLE) -->
-                    <tr><td class="sn">2</td><td contenteditable="true">P&F</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">3</td><td contenteditable="true">Freight</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">4</td><td contenteditable="true">Boarding & Lodging & Local Conveyance</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">5</td><td contenteditable="true">GST</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">6</td><td contenteditable="true">Payment</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">7</td><td contenteditable="true">Delivery</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">8</td><td contenteditable="true">Our Scope</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">9</td><td contenteditable="true">Client Scope</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">10</td><td contenteditable="true">Validity</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">11</td><td contenteditable="true">Warranty</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">12</td><td contenteditable="true">Inspection/Testing</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">13</td><td contenteditable="true">LD Clause</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">14</td><td contenteditable="true">Price</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">15</td><td contenteditable="true">Liability</td><td contenteditable="true"></td></tr>
-                    <tr><td class="sn">16</td><td contenteditable="true">Indemnity</td><td contenteditable="true"></td></tr>
+                    <tr><td class="sn">2</td><td contenteditable="true">P&F</td><td contenteditable="true">Included with Normal Packing, Wooden Packing Extra.</td></tr>
+                    <tr><td class="sn">3</td><td contenteditable="true">Freight</td><td contenteditable="true">Extra At Actuals.</td></tr>
+                    <tr><td class="sn">4</td><td contenteditable="true">Boarding & Lodging & Local Conveyance</td><td contenteditable="true">At Customer's Scope.</td></tr>
+                    <tr><td class="sn">5</td><td contenteditable="true">GST</td><td contenteditable="true">18% Extra as applicable.</td></tr>
+                    <tr><td class="sn">6</td><td contenteditable="true">Payment</td><td contenteditable="true">100% advance against Proforma Invoice.</td></tr>
+                    <tr><td class="sn">7</td><td contenteditable="true">Delivery</td><td contenteditable="true">Fill it as per conditions.</td></tr>
+                    <tr><td class="sn">8</td><td contenteditable="true">Our Scope</td><td contenteditable="true">As per BOM.</td></tr>
+                    <tr><td class="sn">9</td><td contenteditable="true">Client Scope</td><td contenteditable="true">As per Client side scope.</td></tr>
+                    <tr><td class="sn">10</td><td contenteditable="true">Validity</td><td contenteditable="true">30 days from the date of quotation.</td></tr>
+                    <tr><td class="sn">11</td><td contenteditable="true">Warranty</td><td contenteditable="true">12 months from the date of supply.</td></tr>
+                    <tr><td class="sn">12</td><td contenteditable="true">Inspection/Testing</td><td contenteditable="true">At our site after receipt of metarial. Test Certificate & your internal inspection report will be furnished as applicable.</td></tr>
+                    <tr><td class="sn">13</td><td contenteditable="true">LD Clause</td><td contenteditable="true">Not applicable.</td></tr>
+                    <tr><td class="sn">14</td><td contenteditable="true">Price</td><td contenteditable="true">For Kolkata.</td></tr>
+                    <tr><td class="sn">15</td><td contenteditable="true">Liability</td><td contenteditable="true">Liability of the supplier, under various clauses of the contract, shall be limited to the contract value or the amount paid by the customer or whichever is lower.</td></tr>
+                    <tr><td class="sn">16</td><td contenteditable="true">Indemnity</td><td contenteditable="true">In no event shall any party (STA & ACPL) hereto be liable to the other by way of indemnity or by reasons of any breach of the contract or otherwise for any loss of profit, loss of use, loss of contracts, idle labor or for any indirect, incidental or consequential damages whatsoever that may be suffered by the other.</td></tr>
                 </tbody>
             </table>
         

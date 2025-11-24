@@ -129,7 +129,7 @@ dropdown.addEventListener('change', function() {
 #vendorDropdown {
     padding: 12px 20px;
     font-size: 16px;
-    border: 2px solid #28a745;
+    border: 2px solid #111;
     border-radius: 8px;
     background-color: white;
     min-width: 200px;
@@ -139,7 +139,7 @@ dropdown.addEventListener('change', function() {
 #vendorContainer {
     width: 600px;
     height: 400px;
-    border: 2px solid #28a745;
+    border: 2px solid #111;
     margin: 20px auto;
     display: flex;
     justify-content: center;
