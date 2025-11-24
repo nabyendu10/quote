@@ -911,40 +911,106 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   let pagesHtml = '';
   let pageCounter = 1;
 
-  // PAGE 1 - Company logo only (centered)
+  // PAGE 1 - NEW LAYOUT: Exact format from image
+  
+  // Get offer lines content
+  function getOfferLinesContent() {
+    const line1 = document.getElementById('line1');
+    const line2 = document.getElementById('line2');
+    const line3 = document.getElementById('line3');
+    const line4 = document.getElementById('line4');
+    const line5 = document.getElementById('line5');
+    
+    return {
+      offerType: line1 ? line1.textContent.trim() : 'Technical Offer',
+      typeOfWork: line2 ? line2.textContent.trim() : '',
+      description: line3 ? line3.textContent.trim() : 'For',
+      companyName: line4 ? line4.textContent.trim() : '',
+      address: line5 ? line5.textContent.trim() : ''
+    };
+  }
+  
+  // Get project details from table
+  function getProjectDetailsFormatted() {
+    const projectDetailsNode = document.querySelector('.table-box');
+    if (!projectDetailsNode) return { leftContent: '', rightContent: '' };
+    
+    const rows = Array.from(projectDetailsNode.querySelectorAll('.row'));
+    if (rows.length === 0) return { leftContent: '', rightContent: '' };
+    
+    const row = rows[0];
+    const cells = Array.from(row.querySelectorAll('.cell'));
+    
+    if (cells.length < 2) return { leftContent: '', rightContent: '' };
+    
+    const leftCell = cells[0];
+    const rightCell = cells[1];
+    
+    // Get left content - remove excessive line breaks
+    const leftContent = leftCell.innerHTML
+      .replace(/<div[^>]*>/g, '\n')
+      .replace(/<\/div>/g, '')
+      .replace(/<br\s*\/?>/g, '\n')
+      .replace(/<[^>]+>/g, '')
+      .replace(/\n\s*\n/g, '\n')
+      .trim();
+    
+    // Get right content (excluding button only, keep all revised dates)
+    const rightClone = rightCell.cloneNode(true);
+    const button = rightClone.querySelector('#addRevisionBtn');
+    if (button) button.remove();
+    
+    const rightContent = rightClone.innerHTML
+      .replace(/<div[^>]*>/g, '\n')
+      .replace(/<\/div>/g, '')
+      .replace(/<br\s*\/?>/g, '\n')
+      .replace(/<button[^>]*>.*?<\/button>/g, '')
+      .replace(/<[^>]+>/g, '')
+      .replace(/\n\s*\n/g, '\n')
+      .trim();
+    
+    return { leftContent, rightContent };
+  }
+  
+  const offerData = getOfferLinesContent();
+  const projectData = getProjectDetailsFormatted();
+  
   pagesHtml += `
-    <div class="a4page page-logo-only">
-      <div class="header" style="visibility:hidden"></div>
-      <div class="content">
-        <img src="${getSmallLogoSrc()}" alt="Company Logo">
-      </div>
-      <div class="footer" style="visibility:hidden"></div>
-    </div>
-  `;
-  pageCounter++;
-
-  // PAGE 2 - Offer type information and project details
-  const projectDetailsContent = getProjectDetailsContent();
-  pagesHtml += `
-    <div class="a4page page-offer-details">
-      <div class="header">
-        <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-        <div class="center">Quotation Details</div>
-        <div class="right">${headerRightHTML}</div>
-      </div>
-      <div class="content">
-        <div class="offer-section">
-          <h2>Offer Information</h2>
-          <div class="offer-details">
-            ${formatOfferLines()}
-          </div>
+    <div class="a4page page-cover">
+      <div class="cover-content">
+        <!-- Logo at top -->
+        <div class="cover-logo">
+          <img src="${getSmallLogoSrc()}" alt="Company Logo">
         </div>
-        ${projectDetailsContent}
-      </div>
-      <div class="footer">
-        <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
-        <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Rev No: ${escape(revNo)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-        <div>Page ${pageCounter} / TOTAL</div>
+        
+        <!-- Offer Type Title -->
+        <div class="cover-title">${escape(offerData.offerType)}</div>
+        
+        <!-- Type of Work -->
+        <div class="cover-work-type">${escape(offerData.typeOfWork)}</div>
+        
+        <!-- For -->
+        <div class="cover-for">${escape(offerData.description)}</div>
+        
+        <!-- Company Name -->
+        <div class="cover-company">${escape(offerData.companyName)}</div>
+        
+        <!-- Address -->
+        ${offerData.address ? `<div class="cover-address">${escape(offerData.address)}</div>` : ''}
+        
+        <!-- Project Details Table -->
+        <div class="cover-details-table">
+          <table>
+            <tr>
+              <td class="details-left">
+                ${projectData.leftContent.split('\n').map(line => escape(line)).join('<br>')}
+              </td>
+              <td class="details-right">
+                ${projectData.rightContent.split('\n').map(line => escape(line)).join('<br>')}
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
   `;

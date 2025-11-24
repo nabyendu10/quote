@@ -361,6 +361,19 @@
     cursor: text;
 }
 
+.editable-field {
+    display: inline;
+    min-width: 100px;
+    border-bottom: 1px solid #ccc;
+    padding: 2px 4px;
+    white-space: nowrap;
+}
+
+.editable-field:focus {
+    background-color: #fffef7;
+    border-bottom-color: #0099ff;
+}
+
 .rev-container div {
      margin-top: 4px;
 }
