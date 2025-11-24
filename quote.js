@@ -1023,10 +1023,11 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
       <div class="a4page page-vendor">
         <div class="header">
           <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-          <div class="center">Vendor Information</div>
+          <div class="center"></div>
           <div class="right">${headerRightHTML}</div>
         </div>
         <div class="content">
+          <h2 class="page-main-title">Vendor Details</h2>
           <div class="vendor-block"><img src="${vendorLogoSrc}" alt="vendor-logo"></div>
         </div>
         <div class="footer">
@@ -1045,10 +1046,11 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
       <div class="a4page page-project">
         <div class="header">
           <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-          <div class="center">Project Description - Image ${idx + 1}</div>
+          <div class="center"></div>
           <div class="right">${headerRightHTML}</div>
         </div>
         <div class="content">
+          <h2 class="page-main-title">Project Description - Image ${idx + 1}</h2>
           <div class="img-block"><img src="${imageSrc}" alt="project-image-${idx + 1}"></div>
         </div>
         <div class="footer">
@@ -1060,6 +1062,33 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     `;
     pageCounter++;
   });
+
+  // BOM SECTION PAGE (if content exists)
+  const bomContent = document.getElementById('bodyContent');
+  if (bomContent && bomContent.innerHTML.trim() && bomContent.textContent.trim()) {
+    const bomHtml = bomContent.innerHTML;
+    pagesHtml += `
+      <div class="a4page page-bom">
+        <div class="header">
+          <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
+          <div class="center"></div>
+          <div class="right">${headerRightHTML}</div>
+        </div>
+        <div class="content">
+          <h2 class="page-main-title">BOM (Bill of Materials)</h2>
+          <div class="bom-content">
+            ${bomHtml}
+          </div>
+        </div>
+        <div class="footer">
+          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
+          <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
+          <div>Page ${pageCounter} / TOTAL</div>
+        </div>
+      </div>
+    `;
+    pageCounter++;
+  }
 
   // ITEM TABLE PAGES (each section on separate pages)
   tablePagesHtml.forEach((tblHtml, idx)=>{
@@ -1146,11 +1175,43 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
         <meta charset="utf-8"><title>Preview</title>
         <link rel="stylesheet" href="quote-preview.css">
         <link rel="stylesheet" href="quote.css">
+        <style>
+          .page-control {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+          }
+          .page-control input[type="checkbox"] {
+            cursor: pointer;
+          }
+          .page-control label {
+            cursor: pointer;
+            user-select: none;
+          }
+          .a4page {
+            position: relative;
+          }
+          .a4page.excluded {
+            opacity: 0.4;
+            filter: grayscale(1);
+          }
+        </style>
         </head>
         <body>
           <div class="topbar">
             <div class="title">Quotation — Preview</div>
             <div class="controls preview-actions">
+              <button id="selectAllBtn">Select All</button>
+              <button id="deselectAllBtn">Deselect All</button>
               <button id="downloadPdfBtn">Download PDF</button>
               <button id="closeBtn">Close</button>
             </div>
@@ -1166,7 +1227,28 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
             (function(){
               const pages = Array.from(document.querySelectorAll('.a4page'));
               const total = pages.length;
+              
+              // Add checkboxes to each page
               pages.forEach((p, idx)=>{
+                // Add checkbox control
+                const controlDiv = document.createElement('div');
+                controlDiv.className = 'page-control';
+                controlDiv.innerHTML = \`
+                  <input type="checkbox" id="page-\${idx}" checked>
+                  <label for="page-\${idx}">Include in PDF</label>
+                \`;
+                p.appendChild(controlDiv);
+                
+                // Add event listener to toggle page visibility
+                const checkbox = controlDiv.querySelector('input');
+                checkbox.addEventListener('change', function() {
+                  if (this.checked) {
+                    p.classList.remove('excluded');
+                  } else {
+                    p.classList.add('excluded');
+                  }
+                });
+                
                 // replace any "TOTAL" placeholders in footers
                 const foot = p.querySelector('.footer');
                 if (foot) {
@@ -1174,6 +1256,23 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
                   // also replace Page ... if they contain 'Page X / TOTAL' template
                   foot.innerHTML = foot.innerHTML.replace(/Page\\s*(\\d+)\\s*\\/\\s*TOTAL/g, 'Page ' + (idx+1) + ' / ' + total);
                 }
+              });
+
+              // Select/Deselect All buttons
+              document.getElementById('selectAllBtn').addEventListener('click', ()=> {
+                pages.forEach((p, idx) => {
+                  const checkbox = document.getElementById(\`page-\${idx}\`);
+                  checkbox.checked = true;
+                  p.classList.remove('excluded');
+                });
+              });
+
+              document.getElementById('deselectAllBtn').addEventListener('click', ()=> {
+                pages.forEach((p, idx) => {
+                  const checkbox = document.getElementById(\`page-\${idx}\`);
+                  checkbox.checked = false;
+                  p.classList.add('excluded');
+                });
               });
 
               document.getElementById('closeBtn').addEventListener('click', ()=> window.close());
@@ -1188,6 +1287,17 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
               async function buildPDF(){
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p','mm','a4');
+                
+                // Get only checked pages
+                const selectedPages = pages.filter((p, idx) => {
+                  const checkbox = document.getElementById(\`page-\${idx}\`);
+                  return checkbox && checkbox.checked;
+                });
+                
+                if (selectedPages.length === 0) {
+                  alert('Please select at least one page to include in the PDF');
+                  return;
+                }
                 
                 // Helper function to prepare images without compression
                 function prepareImage(imgSrc) {
@@ -1228,8 +1338,8 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
                 }
                 
                 try {
-                  for (let i = 0; i < pages.length; i++) {
-                    const page = pages[i];
+                  for (let i = 0; i < selectedPages.length; i++) {
+                    const page = selectedPages[i];
                     
                     if (i > 0) pdf.addPage();
                     
