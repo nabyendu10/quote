@@ -1124,7 +1124,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
       </div>
       <div class="content">
         <div class="price-section">
-          <h2>Commercial Terms and Conditions</h2>
+          <h2>Price Schedule with Commercial Terms and Conditions</h2>
           ${priceHtml}
         </div>
       </div>
