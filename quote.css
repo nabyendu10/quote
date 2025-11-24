@@ -187,6 +187,31 @@
     color: #999;
 }
 
+/* Specific styling for each offer line */
+#line1 {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+#line2 {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#line3 {
+    font-size: 15px;
+    font-weight: normal;
+}
+
+#line4 {
+    font-size: 27px;
+    font-weight: bold;
+}
+
+#line5 {
+    font-size: 15px;
+}
+
 
 
 
