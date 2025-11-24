@@ -207,6 +207,76 @@
 
 
 
+/* Body Box Styling */
+.body-box {
+    margin: 25px 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.body-box h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+.paste-instruction {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.body-content {
+    min-height: 200px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 15px;
+    line-height: 1.6;
+    outline: none;
+    background: #fafafa;
+    transition: border-color 0.3s ease;
+    resize: both;
+    overflow: auto;
+    max-width: 100%;
+}
+
+.body-content:focus {
+    border-color: #0099ff;
+    background: #fff;
+}
+
+.body-content:empty:before {
+    content: attr(data-placeholder);
+    color: #999;
+}
+
+.body-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.body-content table td,
+.body-content table th {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.body-content table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.body-content table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+
 .offer-display-box {
     width: 80%;
     margin : 20px auto;
@@ -314,7 +384,7 @@ button {
 .upload-area input[type="file"] {
     margin: 10px;
     padding: 8px;
-    border: 2px dashed #0099ff;
+    border: 1px solid #111;
     border-radius: 5px;
     background: #f0f8ff;
 }

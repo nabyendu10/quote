@@ -265,6 +265,71 @@ if (uploadCustomVendorBtn && customVendorLogoInput && vendorContainer) {
 // Offer type handling - using contenteditable divs
 // No buttons needed as users type directly into offer lines
 
+// ========================================
+// BODY-BOX EXCEL PASTE FUNCTIONALITY
+// ========================================
+const bodyContent = document.getElementById('bodyContent');
+
+if (bodyContent) {
+    bodyContent.addEventListener('paste', function(e) {
+        e.preventDefault();
+        
+        // Get pasted data
+        const clipboardData = e.clipboardData || window.clipboardData;
+        const pastedData = clipboardData.getData('text/html') || clipboardData.getData('text/plain');
+        
+        // Check if data contains tab-separated values (Excel format)
+        const plainText = clipboardData.getData('text/plain');
+        
+        if (plainText && plainText.includes('\t')) {
+            // Excel data detected - convert to HTML table
+            const htmlTable = excelToHtmlTable(plainText);
+            document.execCommand('insertHTML', false, htmlTable);
+        } else if (pastedData) {
+            // Regular HTML or text paste
+            // Clean up the HTML to keep only safe tags
+            const cleanedHtml = cleanPastedHtml(pastedData);
+            document.execCommand('insertHTML', false, cleanedHtml);
+        }
+    });
+}
+
+// Convert Excel tab-separated data to HTML table
+function excelToHtmlTable(data) {
+    const rows = data.trim().split('\n');
+    let html = '<table>';
+    
+    rows.forEach((row, index) => {
+        const cells = row.split('\t');
+        html += '<tr>';
+        
+        cells.forEach(cell => {
+            // Use th for first row (header), td for others
+            const tag = index === 0 ? 'th' : 'td';
+            html += `<${tag}>${cell.trim()}</${tag}>`;
+        });
+        
+        html += '</tr>';
+    });
+    
+    html += '</table>';
+    return html;
+}
+
+// Clean pasted HTML to keep only safe formatting
+function cleanPastedHtml(html) {
+    // Create a temporary div to parse HTML
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    
+    // Remove script tags and other dangerous elements
+    const scripts = temp.querySelectorAll('script, style, link');
+    scripts.forEach(el => el.remove());
+    
+    // Get the cleaned HTML
+    return temp.innerHTML;
+}
+
 // offer table
 
 const addRevisionBtn = document.getElementById("addRevisionBtn");
