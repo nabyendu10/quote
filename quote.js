@@ -801,55 +801,101 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   // We will read rows from your visible table, but ignore any buttons and contenteditable attributes.
   function buildCleanTableRows(){
     const table = document.querySelector('.table-container .table-action table');
-    if (!table) return {theadHtml:'', pages: []};
-    // get header labels
-    const ths = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
-    // collect all tbody rows (combine firstRow + itemRows + gstSection ignoring gst rows)
-    // Identify the actual item rows by selecting tbody rows that are not in #gstSection
+    if (!table) return {theadHtml:'', itemRowsData: [], gstHtml: ''};
+    
+    // get header labels (exclude last column which has buttons)
+    const ths = Array.from(table.querySelectorAll('thead th'));
+    const headerTexts = ths.slice(0, -1).map(th => th.textContent.trim()); // Remove last column (button column)
+    
+    // Get item rows (not in gstSection)
     const allTbodyRows = Array.from(table.querySelectorAll('tbody')).flatMap(tb => Array.from(tb.querySelectorAll('tr')));
     const gstSection = document.getElementById('gstSection');
     const itemRows = allTbodyRows.filter(tr => !gstSection || !gstSection.contains(tr));
 
-    // map rows to text cells
-    const rowsData = itemRows.map(tr => {
-      const cells = Array.from(tr.querySelectorAll('td')).map(td => {
-        // read text only (ignore buttons)
-        return td.textContent ? td.textContent.trim() : '';
-      });
-      return cells;
+    // map rows to text cells (exclude last column which has delete button)
+    const itemRowsData = itemRows.map(tr => {
+      const cells = Array.from(tr.querySelectorAll('td'));
+      return cells.slice(0, -1).map(td => td.textContent ? td.textContent.trim() : ''); // Remove last column
     });
 
     // Build a clean thead HTML
-    const theadHtml = '<thead><tr>' + ths.map(h => `<th>${escape(h)}</th>`).join('') + '</tr></thead>';
+    const theadHtml = '<thead><tr>' + headerTexts.map(h => `<th>${escape(h)}</th>`).join('') + '</tr></thead>';
 
-    return { theadHtml, rowsData };
+    // Build GST section HTML
+    let gstHtml = '';
+    if (gstSection) {
+      const gstRows = Array.from(gstSection.querySelectorAll('tr'));
+      gstHtml = '<tbody class="gst-section-pdf">';
+      gstRows.forEach(tr => {
+        const cells = Array.from(tr.querySelectorAll('td'));
+        if (cells.length > 0) {
+          // Get the label cell
+          const labelCell = cells[0];
+          const labelText = labelCell.textContent.trim();
+          
+          // Get value cell
+          const valueCell = cells[1];
+          let valueText = '';
+          
+          if (valueCell) {
+            // Check if it contains input
+            const input = valueCell.querySelector('input');
+            if (input) {
+              valueText = input.value || '';
+            } else {
+              valueText = valueCell.textContent.trim();
+            }
+          }
+          
+          // Calculate colspan for half width
+          const totalCols = headerTexts.length;
+          const labelColspan = Math.floor(totalCols / 2);
+          const valueColspan = totalCols - labelColspan;
+          
+          gstHtml += `<tr>
+            <td colspan="${labelColspan}" class="gst-label">${escape(labelText)}</td>
+            <td colspan="${valueColspan}" class="gst-value">${escape(valueText)}</td>
+          </tr>`;
+        }
+      });
+      gstHtml += '</tbody>';
+    }
+
+    return { theadHtml, itemRowsData, gstHtml };
   }
 
-  const { theadHtml, rowsData } = buildCleanTableRows();
+  const { theadHtml, itemRowsData, gstHtml } = buildCleanTableRows();
 
   // PAGINATE table rows into pages - assume approx N rows per page
   // Using a fixed rows-per-page is simpler and effective: (depends on your font size; 18 is a good default)
   const rowsPerPage = 18;
   const tablePagesHtml = [];
-  for (let i=0;i<rowsData.length;i+=rowsPerPage){
-    const chunk = rowsData.slice(i,i+rowsPerPage);
+  for (let i=0;i<itemRowsData.length;i+=rowsPerPage){
+    const chunk = itemRowsData.slice(i,i+rowsPerPage);
     const tbodyHtml = chunk.map(row => '<tr>' + row.map(cell => `<td>${escape(cell)}</td>`).join('') + '</tr>').join('');
-    const pageTable = `<table class="clean-table">${theadHtml}<tbody>${tbodyHtml}</tbody></table>`;
+    
+    // Add GST section only to the last page
+    const isLastPage = (i + rowsPerPage >= itemRowsData.length);
+    const gstSectionHtml = isLastPage ? gstHtml : '';
+    
+    const pageTable = `<table class="clean-table">${theadHtml}<tbody>${tbodyHtml}</tbody>${gstSectionHtml}</table>`;
     tablePagesHtml.push(pageTable);
   }
-  // If no item rows exist, produce one empty empty table page to keep flow
+  // If no item rows exist, produce one table with just GST section
   if (tablePagesHtml.length === 0){
-    tablePagesHtml.push(`<table class="clean-table">${theadHtml}<tbody><tr><td colspan="${(theadHtml.match(/<th/g)||[]).length}">(No items)</td></tr></tbody></table>`);
+    tablePagesHtml.push(`<table class="clean-table">${theadHtml}<tbody><tr><td colspan="${itemRowsData[0]?.length || 11}">(No items)</td></tr></tbody>${gstHtml}</table>`);
   }
 
   // PRICE SCHEDULE HTML (clean)
   const priceTableNode = document.getElementById('priceTable');
   let priceHtml = '';
   if (priceTableNode){
-    // sanitize price table: take only text cells
+    // sanitize price table: take only text cells, exclude button cells
     const rows = Array.from(priceTableNode.querySelectorAll('tr')).map(r=>{
       const tds = Array.from(r.querySelectorAll('td,th'));
-      return '<tr>' + tds.map(td=>`<td>${escape(td.textContent.trim())}</td>`).join('') + '</tr>';
+      // Filter out cells that contain buttons
+      const filteredTds = tds.filter(td => !td.querySelector('button'));
+      return '<tr>' + filteredTds.map(td=>`<td>${escape(td.textContent.trim())}</td>`).join('') + '</tr>';
     }).join('');
     priceHtml = `<table class="clean-table"><tbody>${rows}</tbody></table>`;
   } else {

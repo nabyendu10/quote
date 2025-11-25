@@ -292,6 +292,31 @@ body{font-family:var(--font); background:#efefef; margin:14px; color:#111}
 .clean-table thead{background:#f7f7f7;font-weight:700;display:table-header-group}
 .clean-table th{font-size:10px;text-align:center;background:#e8f4fd}
 
+/* GST section styling in PDF */
+.clean-table .gst-section-pdf tr {
+  background: #f9f9f9;
+}
+
+.clean-table .gst-label {
+  font-weight: bold;
+  text-align: right;
+  padding-right: 10px;
+  background: #f0f0f0;
+}
+
+.clean-table .gst-value {
+  text-align: right;
+  font-weight: bold;
+  background: #fff;
+}
+
+.clean-table .gst-section-pdf tr:last-child .gst-label,
+.clean-table .gst-section-pdf tr:last-child .gst-value {
+  background: #e8f4fd;
+  font-size: 12px;
+  font-weight: bold;
+}
+
 /* Table page specific styling */
 .page-table .content{padding:4mm var(--gutter)}
 .page-table .clean-table{height:auto;max-height:100%}
