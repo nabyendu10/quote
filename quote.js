@@ -762,12 +762,16 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   `;
 
   // Footer fields: attempt to read if there are inputs / placeholders
-  const purchaser = (document.querySelector('.company-info-box .value') ? document.querySelector('.company-info-box .value').textContent.trim() : '') || '';
+  const purchaser = document.getElementById('line4')?.textContent?.trim() || '';
+  const descriptionOfWork = document.getElementById('line2')?.textContent?.trim() || '';
   // Try to read Quote No / Rev / Project / Date from page (if you later add fields give them ids: quoteNo, revNo, projectName, quoteDate)
-  const quoteNo = (document.getElementById('quoteNo') && document.getElementById('quoteNo').value) ? document.getElementById('quoteNo').value : '';
-  const revNo = (document.getElementById('revNo') && document.getElementById('revNo').value) ? document.getElementById('revNo').value : '';
-  const projectName = (document.getElementById('projectName') && document.getElementById('projectName').value) ? document.getElementById('projectName').value : '';
-  const quoteDate = (document.getElementById('quoteDate') && document.getElementById('quoteDate').value) ? document.getElementById('quoteDate').value : '';
+  const quoteNo = document.getElementById('offerReference')?.textContent?.trim() || '';
+  const revNo = document.getElementById('revNo')?.textContent?.trim() || '';
+  const projectName = descriptionOfWork;
+  
+  // Get last revised date from revBox (last editable field in the revision container)
+  const revBoxFields = document.querySelectorAll('#revBox .editable-field');
+  const quoteDate = revBoxFields.length > 0 ? revBoxFields[revBoxFields.length - 1].textContent.trim() : '';
 
   // Offer text from offer lines
   const offerLines = [
@@ -1076,7 +1080,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
           <div class="vendor-block"><img src="${vendorLogoSrc}" alt="vendor-logo"></div>
         </div>
         <div class="footer">
-          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
+          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
           <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
           <div>Page ${pageCounter} / TOTAL</div>
         </div>
@@ -1099,7 +1103,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
           <div class="img-block"><img src="${imageSrc}" alt="project-image-${idx + 1}"></div>
         </div>
         <div class="footer">
-          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
+          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
           <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
           <div>Page ${pageCounter} / TOTAL</div>
         </div>
@@ -1160,7 +1164,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
                 </div>
               </div>
               <div class="footer">
-                <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
+                <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
                 <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
                 <div>Page ${pageCounter} / TOTAL</div>
               </div>
@@ -1185,7 +1189,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
             </div>
           </div>
           <div class="footer">
-            <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
+            <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
             <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
             <div>Page ${pageCounter} / TOTAL</div>
           </div>
@@ -1201,7 +1205,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
       <div class="a4page page-table">
         <div class="header">
           <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-          <div class="center">Item List ${tablePagesHtml.length > 1 ? `(Page ${idx + 1} of ${tablePagesHtml.length})` : ''}</div>
+          <div class="center"></div>
           <div class="right">${headerRightHTML}</div>
         </div>
         <div class="content">
@@ -1210,7 +1214,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
           </div>
         </div>
         <div class="footer">
-          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
+          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
           <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
           <div>Page ${pageCounter} / TOTAL</div>
         </div>
@@ -1224,7 +1228,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     <div class="a4page page-price-schedule">
       <div class="header">
         <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-        <div class="center">Price Schedule & Commercial Terms</div>
+        <div class="center"></div>
         <div class="right">${headerRightHTML}</div>
       </div>
       <div class="content">
@@ -1234,7 +1238,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
         </div>
       </div>
       <div class="footer">
-        <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
+        <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
         <div>Project: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
         <div>Page ${pageCounter} / TOTAL</div>
       </div>
@@ -1247,7 +1251,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     <div class="a4page page-company-details">
       <div class="header">
         <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-        <div class="center">Company Information</div>
+        <div class="center"></div>
         <div class="right">${headerRightHTML}</div>
       </div>
       <div class="content">
@@ -1259,7 +1263,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
         </div>
       </div>
       <div class="footer">
-        <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
+        <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
         <div>Project: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
         <div>Page ${pageCounter} / TOTAL</div>
       </div>

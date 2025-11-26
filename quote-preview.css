@@ -392,11 +392,11 @@ h2 {
 .page-company-details .content{overflow:auto;font-size:12px;line-height:1.45}
 
 /* Company details table styling */
-.company-details-container{background:#f9f9f9;padding:4mm;border-radius:2mm}
-.company-details-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:2mm;overflow:hidden;box-shadow:0 2px 4px rgba(0,0,0,0.1)}
-.company-details-table td{padding:8px 12px;border:1px solid #ddd;vertical-align:top}
-.company-label{font-weight:bold;color:#2c5530;background:#f8f9fa;width:30%;text-align:right}
-.company-colon{width:5%;text-align:center;color:#666;background:#f8f9fa}
+.company-details-container{background:#ffffff;padding:4mm;border-radius:2mm}
+.company-details-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:2mm;overflow:hidden;}
+.company-details-table td{padding:8px 12px;border:1px solid #ffffff;vertical-align:top}
+.company-label{font-weight:bold;color:#2c5530;background:#ffffff;width:30%;text-align:right}
+.company-colon{width:5%;text-align:center;color:#666;background:#ffffff}
 .company-value{color:#333;background:#fff}
 
 /* General page full text (fallback) */
