@@ -1062,7 +1062,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   `;
   pageCounter++;
 
-  // VENDOR IMAGE PAGE (if vendor is selected, show before project images)
+  // VENDOR PAGE - Show vendor logo if selected
   const vendorLogoSrc = getVendorLogoSrc();
   if (vendorLogoSrc) {
     pagesHtml += `
@@ -1073,7 +1073,6 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
           <div class="right">${headerRightHTML}</div>
         </div>
         <div class="content">
-          <h2 class="page-main-title">Vendor Details</h2>
           <div class="vendor-block"><img src="${vendorLogoSrc}" alt="vendor-logo"></div>
         </div>
         <div class="footer">
@@ -1109,31 +1108,91 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     pageCounter++;
   });
 
-  // BOM SECTION PAGE (if content exists)
+  // BOM SECTION PAGES (with pagination if content is long)
   const bomContent = document.getElementById('bodyContent');
   if (bomContent && bomContent.innerHTML.trim() && bomContent.textContent.trim()) {
-    const bomHtml = bomContent.innerHTML;
-    pagesHtml += `
-      <div class="a4page page-bom">
-        <div class="header">
-          <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-          <div class="center"></div>
-          <div class="right">${headerRightHTML}</div>
-        </div>
-        <div class="content">
-          <h2 class="page-main-title">BOM (Bill of Materials)</h2>
-          <div class="bom-content">
-            ${bomHtml}
+    // Extract tables from BOM content
+    const bomTables = bomContent.querySelectorAll('table');
+    
+    if (bomTables.length > 0) {
+      bomTables.forEach(table => {
+        // Get table header - check both thead and first tbody row
+        let thead = table.querySelector('thead');
+        let theadHtml = '';
+        let headerRow = null;
+        let dataRows = [];
+        
+        if (thead) {
+          // Has proper thead
+          theadHtml = thead.outerHTML;
+          const tbody = table.querySelector('tbody');
+          dataRows = tbody ? Array.from(tbody.querySelectorAll('tr')) : [];
+        } else {
+          // No thead - first row is header
+          const allRows = Array.from(table.querySelectorAll('tr'));
+          if (allRows.length > 0) {
+            headerRow = allRows[0];
+            // Create thead from first row
+            theadHtml = '<thead>' + headerRow.outerHTML.replace(/<td/g, '<th').replace(/<\/td>/g, '</th>') + '</thead>';
+            dataRows = allRows.slice(1); // Rest are data rows
+          }
+        }
+        
+        // Paginate rows - approximately 45 rows per page for BOM (fill entire page)
+        const rowsPerPage = 45;
+        
+        for (let i = 0; i < dataRows.length; i += rowsPerPage) {
+          const pageRows = dataRows.slice(i, i + rowsPerPage);
+          const tbodyHtml = '<tbody>' + pageRows.map(row => row.outerHTML).join('') + '</tbody>';
+          // Always include header on every page
+          const pageTableHtml = '<table class="bom-table">' + theadHtml + tbodyHtml + '</table>';
+          
+          pagesHtml += `
+            <div class="a4page page-bom">
+              <div class="header">
+                <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
+                <div class="center"></div>
+                <div class="right">${headerRightHTML}</div>
+              </div>
+              <div class="content">
+                <div class="bom-content">
+                  ${pageTableHtml}
+                </div>
+              </div>
+              <div class="footer">
+                <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
+                <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
+                <div>Page ${pageCounter} / TOTAL</div>
+              </div>
+            </div>
+          `;
+          pageCounter++;
+        }
+      });
+    } else {
+      // If no tables, just output the content as-is (non-table content)
+      const bomHtml = bomContent.innerHTML;
+      pagesHtml += `
+        <div class="a4page page-bom">
+          <div class="header">
+            <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
+            <div class="center">BOM (Bill of Materials)</div>
+            <div class="right">${headerRightHTML}</div>
+          </div>
+          <div class="content">
+            <div class="bom-content">
+              ${bomHtml}
+            </div>
+          </div>
+          <div class="footer">
+            <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
+            <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
+            <div>Page ${pageCounter} / TOTAL</div>
           </div>
         </div>
-        <div class="footer">
-          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)}</div>
-          <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-          <div>Page ${pageCounter} / TOTAL</div>
-        </div>
-      </div>
-    `;
-    pageCounter++;
+      `;
+      pageCounter++;
+    }
   }
 
   // ITEM TABLE PAGES (each section on separate pages)
