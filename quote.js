@@ -38,6 +38,49 @@ function setSelectedVendor(vendorName) {
 document.addEventListener("DOMContentLoaded", function (){
 
 // ========================================
+// FIX: Move cursor to end when focusing contenteditable elements
+// ========================================
+// This fixes the issue where Shift+Tab moves cursor to start of text
+document.addEventListener('focus', function(e) {
+    const target = e.target;
+    
+    // Check if the focused element is contenteditable
+    if (target.contentEditable === 'true' || target.isContentEditable) {
+        // Use setTimeout to ensure this runs after browser's default focus behavior
+        setTimeout(function() {
+            // Move cursor to the end of the content
+            const range = document.createRange();
+            const sel = window.getSelection();
+            
+            // If element has content, move cursor to end
+            if (target.childNodes.length > 0) {
+                const lastNode = target.childNodes[target.childNodes.length - 1];
+                const offset = lastNode.nodeType === Node.TEXT_NODE ? lastNode.length : 0;
+                
+                try {
+                    range.setStart(lastNode, offset);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                } catch (e) {
+                    // Fallback: just select all and collapse to end
+                    range.selectNodeContents(target);
+                    range.collapse(false);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            } else {
+                // Empty element, just set cursor inside
+                range.selectNodeContents(target);
+                range.collapse(false);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        }, 0);
+    }
+}, true); // Use capture phase to catch focus events early
+
+// ========================================
 // DROPDOWN LOGO SELECTION SYSTEM
 // ========================================
 // Automatically scans assets/sta-logo folder and creates dropdown options
@@ -1291,7 +1334,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
             right: 5px;
             background: rgba(255, 255, 255, 0.9);
             padding: 5px 10px;
-            border: 1px solid #ccc;
+            // border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 12px;
             z-index: 10;
@@ -1344,7 +1387,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
                 controlDiv.className = 'page-control';
                 controlDiv.innerHTML = \`
                   <input type="checkbox" id="page-\${idx}" checked>
-                  <label for="page-\${idx}">Include in PDF</label>
+                  <label for="page-\${idx}"></label>
                 \`;
                 p.appendChild(controlDiv);
                 
