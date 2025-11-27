@@ -389,10 +389,10 @@ h2 {
 
 /* Company details page */
 .page-company-details .company-section h2{font-size:18px;margin-bottom:6mm;color:#2c5530;border-bottom:2px solid #2c5530;padding-bottom:2mm}
-.page-company-details .content{overflow:auto;font-size:12px;line-height:1.45}
+.page-company-details .content{overflow:auto;font-size:12px;line-height:0.5}
 
 /* Company details table styling */
-.company-details-container{background:#ffffff;padding:4mm;border-radius:2mm}
+.company-details-container{background:#838383;padding:0.4mm;border-radius:2mm}
 .company-details-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:2mm;overflow:hidden;}
 .company-details-table td{padding:8px 12px;border:1px solid #ffffff;vertical-align:top}
 .company-label{font-weight:bold;color:#2c5530;background:#ffffff;width:30%;text-align:right}
