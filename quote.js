@@ -844,6 +844,24 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     return lines.join('');
   }
   
+  // Generate footer table like the attachment format
+  function generateFooterTable(pageNumber) {
+    return `
+      <div class="footer-table">
+        <div class="footer-row">
+          <div class="footer-cell">Purchaser: ${escape(purchaser || '')}</div>
+          <div class="footer-cell">Ref: ${escape(quoteNo)}</div>
+          <div class="footer-cell">Rev: ${escape(revNo)}</div>
+        </div>
+        <div class="footer-row">
+          <div class="footer-cell">PROJECT: ${escape(projectName)}</div>
+          <div class="footer-cell">Date: ${escape(quoteDate)}</div>
+          <div class="footer-cell">Page ${pageNumber} / TOTAL</div>
+        </div>
+      </div>
+    `;
+  }
+  
   // Get uploaded project images
   const uploadedImageSrcs = getUploadedImages(); // Get array of image sources
   
@@ -1128,9 +1146,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
           <div class="vendor-block"><img src="${vendorLogoSrc}" alt="vendor-logo"></div>
         </div>
         <div class="footer">
-          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-          <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-          <div>Page ${pageCounter} / TOTAL</div>
+          ${generateFooterTable(pageCounter)}
         </div>
       </div>
     `;
@@ -1149,9 +1165,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
           <div class="img-block"><img src="${imageSrc}" alt="project-image-${idx + 1}"></div>
         </div>
         <div class="footer">
-          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-          <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-          <div>Page ${pageCounter} / TOTAL</div>
+          ${generateFooterTable(pageCounter)}
         </div>
       </div>
     `;
@@ -1208,9 +1222,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
                 </div>
               </div>
               <div class="footer">
-                <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-                <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-                <div>Page ${pageCounter} / TOTAL</div>
+                ${generateFooterTable(pageCounter)}
               </div>
             </div>
           `;
@@ -1231,9 +1243,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
             </div>
           </div>
           <div class="footer">
-            <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-            <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-            <div>Page ${pageCounter} / TOTAL</div>
+            ${generateFooterTable(pageCounter)}
           </div>
         </div>
       `;
@@ -1254,9 +1264,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
           </div>
         </div>
         <div class="footer">
-          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-          <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-          <div>Page ${pageCounter} / TOTAL</div>
+          ${generateFooterTable(pageCounter)}
         </div>
       </div>
     `;
@@ -1276,9 +1284,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
         </div>
       </div>
       <div class="footer">
-        <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-        <div>Project: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-        <div>Page ${pageCounter} / TOTAL</div>
+        ${generateFooterTable(pageCounter)}
       </div>
     </div>
   `;
@@ -1299,9 +1305,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
         </div>
       </div>
       <div class="footer">
-        <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-        <div>Project: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-        <div>Page ${pageCounter} / TOTAL</div>
+        ${generateFooterTable(pageCounter)}
       </div>
     </div>
   `;
