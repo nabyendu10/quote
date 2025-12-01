@@ -35,10 +35,19 @@ body{font-family:var(--font); background:#efefef; margin:14px; color:#111}
   padding:4mm var(--gutter);
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:8mm;
+  justify-content:center;
   border-bottom:0;
 }
+
+/* New header image styling */
+.header .header-image{
+  width:100%;
+  height:auto;
+  object-fit:contain;
+  display:block;
+}
+
+/* Legacy support for old header structure (if any remains) */
 .header .left{display:flex;align-items:center;gap:8px}
 .header img.logo-small{width:30mm;height:auto;display:block}
 .header .center{flex:1;text-align:center;font-weight:700}

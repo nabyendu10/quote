@@ -778,7 +778,19 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     // helpers
     const escape = s => (s||'').toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
-  // get small logo src (from dropdown selection)
+  // get header image src (from dropdown selection)
+  function getHeaderImageSrc(){
+    const selectedLogo = getSelectedLogo();
+    if (selectedLogo === 'sta') {
+      return `assets/sta-logo/sta-header.png`;
+    } else if (selectedLogo === 'staipl') {
+      return `assets/sta-logo/staipl-header.png`;
+    }
+    // fallback to sta header
+    return 'assets/sta-logo/sta-header.png';
+  }
+
+  // get small logo src for cover page (from dropdown selection)
   function getSmallLogoSrc(){
     const selectedLogo = getSelectedLogo();
     if (selectedLogo) {
@@ -797,12 +809,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     return null; // No vendor selected
   }
 
-  // Read header right lines (fixed as per your instruction)
-  const headerRightHTML = `
-    <div>www.startrackautomation.in</div>
-    <div>8101274497</div>
-    <div>startrackautomation@gmail.com</div>
-  `;
+  // Header is now handled by header images (sta-header.png or staipl-header.png)
 
   // Footer fields: attempt to read if there are inputs / placeholders
   const purchaser = document.getElementById('line4')?.textContent?.trim() || '';
@@ -1115,9 +1122,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     pagesHtml += `
       <div class="a4page page-vendor">
         <div class="header">
-          <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-          <div class="center"></div>
-          <div class="right">${headerRightHTML}</div>
+          <img class="header-image" src="${getHeaderImageSrc()}" alt="header">
         </div>
         <div class="content">
           <div class="vendor-block"><img src="${vendorLogoSrc}" alt="vendor-logo"></div>
@@ -1137,9 +1142,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     pagesHtml += `
       <div class="a4page page-project">
         <div class="header">
-          <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-          <div class="center"></div>
-          <div class="right">${headerRightHTML}</div>
+          <img class="header-image" src="${getHeaderImageSrc()}" alt="header">
         </div>
         <div class="content">
           <h2 class="page-main-title">Project Description - Image ${idx + 1}</h2>
@@ -1197,9 +1200,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
           pagesHtml += `
             <div class="a4page page-bom">
               <div class="header">
-                <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-                <div class="center"></div>
-                <div class="right">${headerRightHTML}</div>
+                <img class="header-image" src="${getHeaderImageSrc()}" alt="header">
               </div>
               <div class="content">
                 <div class="bom-content">
@@ -1222,9 +1223,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
       pagesHtml += `
         <div class="a4page page-bom">
           <div class="header">
-            <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-            <div class="center">BOM (Bill of Materials)</div>
-            <div class="right">${headerRightHTML}</div>
+            <img class="header-image" src="${getHeaderImageSrc()}" alt="header">
           </div>
           <div class="content">
             <div class="bom-content">
@@ -1247,9 +1246,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     pagesHtml += `
       <div class="a4page page-table">
         <div class="header">
-          <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-          <div class="center"></div>
-          <div class="right">${headerRightHTML}</div>
+          <img class="header-image" src="${getHeaderImageSrc()}" alt="header">
         </div>
         <div class="content">
           <div style="width:100%;height:100%;overflow:hidden">
@@ -1270,9 +1267,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   pagesHtml += `
     <div class="a4page page-price-schedule">
       <div class="header">
-        <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-        <div class="center"></div>
-        <div class="right">${headerRightHTML}</div>
+        <img class="header-image" src="${getHeaderImageSrc()}" alt="header">
       </div>
       <div class="content">
         <div class="price-section">
@@ -1293,9 +1288,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   pagesHtml += `
     <div class="a4page page-company-details">
       <div class="header">
-        <div class="left"><img class="logo-small" src="${getSmallLogoSrc()}" alt="logo"></div>
-        <div class="center"></div>
-        <div class="right">${headerRightHTML}</div>
+        <img class="header-image" src="${getHeaderImageSrc()}" alt="header">
       </div>
       <div class="content">
         <div class="company-section">
