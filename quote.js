@@ -1207,9 +1207,16 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
           <div class="vendor-block"><img src="${vendorLogoSrc}" alt="vendor-logo"></div>
         </div>
         <div class="footer">
-          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-          <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-          <div>Page ${pageCounter} / TOTAL</div>
+          <div class="footer-row">
+            <div class="footer-col-left">Purchaser: ${escape(purchaser || '')}</div>
+            <div class="footer-col-center">Ref: ${escape(quoteNo)}</div>
+            <div class="footer-col-right">Rev: ${escape(revNo)}</div>
+          </div>
+          <div class="footer-row">
+            <div class="footer-col-left">Project: ${escape(projectName)}</div>
+            <div class="footer-col-center">Date: ${escape(quoteDate)}</div>
+            <div class="footer-col-right">Page ${pageCounter} / TOTAL</div>
+          </div>
         </div>
       </div>
     `;
@@ -1230,9 +1237,16 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
           <div class="img-block"><img src="${imageSrc}" alt="project-image-${idx + 1}"></div>
         </div>
         <div class="footer">
-          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-          <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-          <div>Page ${pageCounter} / TOTAL</div>
+          <div class="footer-row">
+            <div class="footer-col-left">Purchaser: ${escape(purchaser || '')}</div>
+            <div class="footer-col-center">Ref: ${escape(quoteNo)}</div>
+            <div class="footer-col-right">Rev: ${escape(revNo)}</div>
+          </div>
+          <div class="footer-row">
+            <div class="footer-col-left">Project: ${escape(projectName)}</div>
+            <div class="footer-col-center">Date: ${escape(quoteDate)}</div>
+            <div class="footer-col-right">Page ${pageCounter} / TOTAL</div>
+          </div>
         </div>
       </div>
     `;
@@ -1291,9 +1305,16 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
                 </div>
               </div>
               <div class="footer">
-                <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-                <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-                <div>Page ${pageCounter} / TOTAL</div>
+                <div class="footer-row">
+                  <div class="footer-col-left">Purchaser: ${escape(purchaser || '')}</div>
+                  <div class="footer-col-center">Ref: ${escape(quoteNo)}</div>
+                  <div class="footer-col-right">Rev: ${escape(revNo)}</div>
+                </div>
+                <div class="footer-row">
+                  <div class="footer-col-left">Project: ${escape(projectName)}</div>
+                  <div class="footer-col-center">Date: ${escape(quoteDate)}</div>
+                  <div class="footer-col-right">Page ${pageCounter} / TOTAL</div>
+                </div>
               </div>
             </div>
           `;
@@ -1316,9 +1337,16 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
             </div>
           </div>
           <div class="footer">
-            <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-            <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-            <div>Page ${pageCounter} / TOTAL</div>
+            <div class="footer-row">
+              <div class="footer-col-left">Purchaser: ${escape(purchaser || '')}</div>
+              <div class="footer-col-center">Ref: ${escape(quoteNo)}</div>
+              <div class="footer-col-right">Rev: ${escape(revNo)}</div>
+            </div>
+            <div class="footer-row">
+              <div class="footer-col-left">Project: ${escape(projectName)}</div>
+              <div class="footer-col-center">Date: ${escape(quoteDate)}</div>
+              <div class="footer-col-right">Page ${pageCounter} / TOTAL</div>
+            </div>
           </div>
         </div>
       `;
@@ -1341,9 +1369,16 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
           </div>
         </div>
         <div class="footer">
-          <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-          <div>Project Name: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-          <div>Page ${pageCounter} / TOTAL</div>
+          <div class="footer-row">
+            <div class="footer-col-left">Purchaser: ${escape(purchaser || '')}</div>
+            <div class="footer-col-center">Ref: ${escape(quoteNo)}</div>
+            <div class="footer-col-right">Rev: ${escape(revNo)}</div>
+          </div>
+          <div class="footer-row">
+            <div class="footer-col-left">Project: ${escape(projectName)}</div>
+            <div class="footer-col-center">Date: ${escape(quoteDate)}</div>
+            <div class="footer-col-right">Page ${pageCounter} / TOTAL</div>
+          </div>
         </div>
       </div>
     `;
@@ -1365,9 +1400,16 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
         </div>
       </div>
       <div class="footer">
-        <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-        <div>Project: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-        <div>Page ${pageCounter} / TOTAL</div>
+        <div class="footer-row">
+          <div class="footer-col-left">Purchaser: ${escape(purchaser || '')}</div>
+          <div class="footer-col-center">Ref: ${escape(quoteNo)}</div>
+          <div class="footer-col-right">Rev: ${escape(revNo)}</div>
+        </div>
+        <div class="footer-row">
+          <div class="footer-col-left">Project: ${escape(projectName)}</div>
+          <div class="footer-col-center">Date: ${escape(quoteDate)}</div>
+          <div class="footer-col-right">Page ${pageCounter} / TOTAL</div>
+        </div>
       </div>
     </div>
   `;
@@ -1390,9 +1432,16 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
         </div>
       </div>
       <div class="footer">
-        <div>Purchaser: ${escape(purchaser || '')} &nbsp; | &nbsp; Quote No: ${escape(quoteNo)} &nbsp; | &nbsp; Rev: ${escape(revNo)}</div>
-        <div>Project: ${escape(projectName)} &nbsp; | &nbsp; Date: ${escape(quoteDate)}</div>
-        <div>Page ${pageCounter} / TOTAL</div>
+        <div class="footer-row">
+          <div class="footer-col-left">Purchaser: ${escape(purchaser || '')}</div>
+          <div class="footer-col-center">Ref: ${escape(quoteNo)}</div>
+          <div class="footer-col-right">Rev: ${escape(revNo)}</div>
+        </div>
+        <div class="footer-row">
+          <div class="footer-col-left">Project: ${escape(projectName)}</div>
+          <div class="footer-col-center">Date: ${escape(quoteDate)}</div>
+          <div class="footer-col-right">Page ${pageCounter} / TOTAL</div>
+        </div>
       </div>
     </div>
   `;
