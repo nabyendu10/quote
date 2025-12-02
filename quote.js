@@ -813,7 +813,7 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   const projectName = descriptionOfWork;
   
   // Get last revised date from revBox (last editable field in the revision container)
-  const revBoxFields = document.querySelectorAll('#revBox .editable-field');
+  const revBoxFields = document.querySelectorAll('#revBox .revised-date-field');
   const quoteDate = revBoxFields.length > 0 ? revBoxFields[revBoxFields.length - 1].textContent.trim() : '';
 
   // Offer text from offer lines
@@ -978,13 +978,15 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
 
   // Get project details content
   function getProjectDetailsContent() {
-    const projectDetailsNode = document.querySelector('.table-box');
+    const projectDetailsNode = document.querySelector('.project-details-container');
     let projectDetailsHtml = '';
     if (projectDetailsNode) {
-      // Extract and clean project details
-      const rows = Array.from(projectDetailsNode.querySelectorAll('.row .cell'));
-      const leftContent = rows[0] ? rows[0].textContent.trim() : '';
-      const rightContent = rows[1] ? rows[1].textContent.trim() : '';
+      // Extract and clean project details from new structure
+      const leftCell = projectDetailsNode.querySelector('.project-left-cell');
+      const rightCell = projectDetailsNode.querySelector('.project-right-cell');
+      
+      const leftContent = leftCell ? leftCell.textContent.trim() : '';
+      const rightContent = rightCell ? rightCell.textContent.trim() : '';
       
       projectDetailsHtml = `
         <div class="project-details">
@@ -1025,48 +1027,79 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   
   // Get project details from table
   function getProjectDetailsFormatted() {
-    const projectDetailsNode = document.querySelector('.table-box');
+    const projectDetailsNode = document.querySelector('.project-details-container');
+    console.log('Project details node found:', !!projectDetailsNode);
     if (!projectDetailsNode) return { leftContent: '', rightContent: '' };
     
-    const rows = Array.from(projectDetailsNode.querySelectorAll('.row'));
-    if (rows.length === 0) return { leftContent: '', rightContent: '' };
+    const leftCell = projectDetailsNode.querySelector('.project-left-cell');
+    const rightCell = projectDetailsNode.querySelector('.project-right-cell');
+    console.log('Left cell found:', !!leftCell, 'Right cell found:', !!rightCell);
     
-    const row = rows[0];
-    const cells = Array.from(row.querySelectorAll('.cell'));
+    if (!leftCell || !rightCell) return { leftContent: '', rightContent: '' };
     
-    if (cells.length < 2) return { leftContent: '', rightContent: '' };
+    // Format left content with proper spacing between Ref and End User
+    const leftFields = leftCell.querySelectorAll('.field-row');
+    let leftContentFormatted = '';
     
-    const leftCell = cells[0];
-    const rightCell = cells[1];
+    leftFields.forEach((field, index) => {
+      const text = field.textContent.trim();
+      if (text) {
+        if (index === 0) {
+          // Ref field - add extra spacing after
+          leftContentFormatted += text + '\n\n\n';
+        } else {
+          // Other fields - normal spacing
+          leftContentFormatted += text + '\n';
+        }
+      }
+    });
     
-    // Get left content - remove excessive line breaks
-    const leftContent = leftCell.innerHTML
-      .replace(/<div[^>]*>/g, '\n')
-      .replace(/<\/div>/g, '')
-      .replace(/<br\s*\/?>/g, '\n')
-      .replace(/<[^>]+>/g, '')
-      .replace(/\n\s*\n/g, '\n')
-      .trim();
-    
-    // Get right content (excluding button only, keep all revised dates)
+    // Format right content with offer reference and rev no on same line
     const rightClone = rightCell.cloneNode(true);
     const button = rightClone.querySelector('#addRevisionBtn');
     if (button) button.remove();
     
-    const rightContent = rightClone.innerHTML
-      .replace(/<div[^>]*>/g, '\n')
-      .replace(/<\/div>/g, '')
-      .replace(/<br\s*\/?>/g, '\n')
-      .replace(/<button[^>]*>.*?<\/button>/g, '')
-      .replace(/<[^>]+>/g, '')
-      .replace(/\n\s*\n/g, '\n')
-      .trim();
+    // Get offer reference and rev no from the form directly
+    const offerRefElement = document.getElementById('offerReference');
+    const revNoElement = document.getElementById('revNo');
+    const offerRef = offerRefElement ? offerRefElement.textContent.trim() : '';
+    const revNo = revNoElement ? revNoElement.textContent.trim() : '';
     
-    return { leftContent, rightContent };
+    console.log('Offer Reference:', offerRef, 'Rev No:', revNo);
+    
+    // Get other right content (offer date, revised dates, prepared by)
+    const offerDateSection = rightClone.querySelector('.offer-date-section')?.textContent?.trim() || '';
+    const revBoxContent = rightClone.querySelector('#revBox')?.textContent?.trim() || '';
+    const preparedSection = rightClone.querySelector('.prepared-section')?.textContent?.trim() || '';
+    
+    let rightContentFormatted = '';
+    
+    // Add Offer Reference and Rev No in separate rows on right side
+    rightContentFormatted += `Offer Reference: ${offerRef || ''}\n`;
+    rightContentFormatted += `Rev. No: ${revNo || ''}\n\n`;
+    
+    // Add space before Offer Date section
+    if (offerDateSection) {
+      rightContentFormatted += offerDateSection + '\n';
+    }
+    if (revBoxContent) {
+      rightContentFormatted += revBoxContent + '\n';
+    }
+    if (preparedSection) {
+      rightContentFormatted += preparedSection;
+    }
+    
+    return { 
+      leftContent: leftContentFormatted.trim(), 
+      rightContent: rightContentFormatted.trim() 
+    };
   }
   
   const offerData = getOfferLinesContent();
   const projectData = getProjectDetailsFormatted();
+  
+  console.log('Project data:', projectData);
+  console.log('Offer data:', offerData);
   
   pagesHtml += `
     <div class="a4page page-cover">

@@ -328,12 +328,234 @@
     font-size: 15px;
 }
 
+/* New Project Details Styling */
+.project-details-container {
+    width: 80%;
+    margin: 20px auto;
+    border: 2px solid #000;
+    background-color: white;
+    color: black;
+    font-family: Arial, sans-serif;
+}
+
+.project-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px 15px;
+    background-color: white;
+    border-bottom: 1px solid #ccc;
+}
+
+.ref-section {
+    font-size: 14px;
+}
+
+.ref-field {
+    background: transparent;
+    border: none;
+    border: 1px solid #000;
+    color: black;
+    padding: 2px 5px;
+    min-width: 200px;
+}
+
+.offer-rev-section {
+    text-align: right;
+}
+
+.offer-rev-labels {
+    display: flex;
+    gap: 50px;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.offer-rev-inputs {
+    display: flex;
+    gap: 20px;
+}
+
+.offer-input, .rev-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #000;
+    color: black;
+    padding: 2px 5px;
+    min-width: 80px;
+}
+
+.project-main-row {
+    display: flex;
+    width: 100%;
+}
+
+.project-left-cell {
+    flex: 1;
+    border-right: 1px solid #000;
+    padding: 15px;
+    background-color: white;
+}
+
+.project-right-cell {
+    flex: 1;
+    padding: 15px;
+    background-color: white;
+}
+
+.field-row {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: flex-start;
+    font-size: 14px;
+}
+
+.field-spacer {
+    height: 30px;
+    margin-bottom: 8px;
+}
+
+.colon {
+    margin: 0 8px;
+}
+
+.project-field {
+    background: transparent;
+    border: none;
+    border: 1px solid #000;
+    border-radius: 5px;
+    color: black;
+    padding: 4px 8px;
+    min-width: 150px;
+    flex: 1;
+    text-align: left;
+    vertical-align: top;
+    line-height: 1.4;
+    min-height: 20px;
+}
+
+.offer-rev-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    gap: 30px;
+}
+
+.offer-ref-group {
+    flex: 1;
+    text-align: left;
+}
+
+.rev-no-group {
+    flex: 0 0 auto;
+    text-align: left;
+    min-width: 120px;
+}
+
+.offer-ref-group .label,
+.rev-no-group .label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: normal;
+}
+
+.offer-ref-field {
+    background: transparent;
+    border: none;
+    border: 1px solid #000;
+    border-radius: 5px;
+    color: black;
+    padding: 3px 5px;
+    min-width: 150px;
+    display: block;
+    width: 100%;
+}
+
+.rev-no-field {
+    background: transparent;
+    border: none;
+    border: 1px solid #000;
+    border-radius: 5px;
+    color: black;
+    padding: 3px 5px;
+    min-width: 40px;
+    display: block;
+    width: 100%;
+}
+
+.offer-date-section {
+    margin-bottom: 15px;
+}
+
+.offer-date-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.date-row {
+    font-size: 14px;
+}
+
+.date-field {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #000;
+    color: black;
+    padding: 2px 5px;
+    min-width: 120px;
+}
+
+.revised-date-field {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #000;
+    color: black;
+    padding: 2px 5px;
+    min-width: 120px;
+}
+
+.add-revision-btn {
+    background: #007bff;
+    color: white;
+    border: 1px solid #777;
+    padding: 5px 10px;
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.add-revision-btn:hover {
+    background: #666;
+}
+
+.prepared-section {
+    margin-top: 20px;
+}
+
+.prepared-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.prepared-field {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #000;
+    color: black;
+    padding: 2px 5px;
+    min-width: 150px;
+    display: block;
+}
+
+/* Legacy table-box styles for backward compatibility */
 .table-box {
     width: 80%;
     margin: 20px auto;
     border: 1px solid #000;
     border-collapse: collapse;
-    font-family: Arial, sans-serif;
 }
 
 .row {
@@ -359,8 +581,8 @@
 
 .editable-field {
     display: inline;
-    min-width: 100px;
-    border-bottom: 1px solid #ccc;
+    width: auto;
+    border: 1px solid #000000;
     padding: 2px 4px;
     white-space: nowrap;
 }
@@ -775,4 +997,46 @@ button {
 
 .info-table .value:focus {
     background: #dcdcdc
+}
+
+/* Preview Page Project Details Styling */
+.cover-details-table {
+    width: 100%;
+    margin: 20px 0;
+    border: 2px solid #000;
+    background-color: white;
+}
+
+.cover-details-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.details-left, .details-right {
+    border: 1px solid #000;
+    padding: 15px;
+    vertical-align: top;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.details-left {
+    width: 50%;
+    border-right: 1px solid #000;
+}
+
+.details-right {
+    width: 50%;
+}
+
+/* Add spacing between Ref and End User in preview */
+.details-left .ref-spacing {
+    margin-bottom: 25px;
+}
+
+/* Style for offer reference and rev no inline in preview */
+.details-right .offer-rev-inline {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 15px;
 }

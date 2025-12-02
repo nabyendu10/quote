@@ -39,47 +39,53 @@
         <br>
         <!--project details-->
         <h2>Details about the project</h2>
-        <div class="table-box">
-           <div class="row">
-
-               <!-- LEFT SIDE -->
-               <div class="cell">
-                   Enquiry Reference: <span contenteditable="true" class="editable-field"></span><br>
-
-                   End User: <span contenteditable="true" class="editable-field"></span><br>
-                   Purchaser: <span contenteditable="true" class="editable-field"></span><br>
-                   Contractor: <span contenteditable="true" class="editable-field"></span><br>
-                   Consultant: <span contenteditable="true" class="editable-field"></span><br>
-                   Contact Person: <span contenteditable="true" class="editable-field"></span><br>
-               </div>
-           
-               <!-- RIGHT SIDE -->
-               <div class="cell">
-
-                   <div>
-                       Offer Reference: <span id="offerReference" contenteditable="true" class="editable-field"></span><br>
-                       Rev. No: <span id="revNo" contenteditable="true" class="editable-field"></span><br>
-
-                       <u>Offer Date</u> <br>
-                       Date: <span contenteditable="true" class="editable-field"></span><br>
-                   </div>
-               
-                   <!-- REVISED DATE LIST -->
-                   <div id="revBox" class="rev-container">
-                        <div>Revised date: <span contenteditable="true" class="editable-field"></span></div>
+        <div class="project-details-container">
+            <!-- Main Content Row -->
+            <div class="project-main-row">
+                <!-- LEFT SIDE -->
+                <div class="project-left-cell">
+                    <div class="field-row">Ref<span class="colon">:</span> <span contenteditable="true" class="project-field"></span></div>
+                    <div class="field-spacer"></div>
+                    <div class="field-row">End User<span class="colon">:</span> <span contenteditable="true" class="project-field"></span></div>
+                    <div class="field-row">Purchaser<span class="colon">:</span> <span contenteditable="true" class="project-field"></span></div>
+                    <div class="field-row">Contractor<span class="colon">:</span> <span contenteditable="true" class="project-field"></span></div>
+                    <div class="field-row">Consultant<span class="colon">:</span> <span contenteditable="true" class="project-field"></span></div>
+                    <div class="field-row">Contact Person<span class="colon">:</span> <span contenteditable="true" class="project-field"></span></div>
+                </div>
+            
+                <!-- RIGHT SIDE -->
+                <div class="project-right-cell">
+                    <div class="offer-rev-section">
+                        <div class="offer-rev-container">
+                            <div class="offer-ref-group">
+                                <div class="label"><strong>Offer Reference:</strong></div>
+                                <span id="offerReference" contenteditable="true" class="offer-ref-field"></span>
+                            </div>
+                            <div class="rev-no-group">
+                                <div class="label">Rev. No:</div>
+                                <span id="revNo" contenteditable="true" class="rev-no-field"></span>
+                            </div>
+                        </div>
                     </div>
-               
-                   <!-- BUTTON -->
-                   <button id="addRevisionBtn">Add Revised Date</button>
-               
-                   <br><br>
-                   <div class="prepared-box">
-                        <span class="label">Offer Prepared by:</span>
-                        <span class="value" contenteditable="true"></span>
+                    <div class="offer-date-section">
+                        <div class="offer-date-label">Offer Date</div>
+                        <div class="date-row">Date: <span contenteditable="true" class="date-field"></span></div>
                     </div>
-               
-               </div>
-           </div>
+                
+                    <!-- REVISED DATE LIST -->
+                    <div id="revBox" class="rev-container">
+                        <div>Revised date: <span contenteditable="true" class="revised-date-field"></span></div>
+                    </div>
+                
+                    <!-- BUTTON -->
+                    <button id="addRevisionBtn" class="add-revision-btn">Add Revised Date</button>
+                
+                    <div class="prepared-section">
+                        <div class="prepared-label">Offer Prepared by:</div>
+                        <span class="prepared-field" contenteditable="true"></span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!--Vendor Selection-->
