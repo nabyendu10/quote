@@ -379,10 +379,11 @@ const addRevisionBtn = document.getElementById("addRevisionBtn");
 const revBox = document.getElementById("revBox");
 
 if (addRevisionBtn && revBox) {
+    let revisionCounter = 1;
     addRevisionBtn.addEventListener("click", function () {
+        revisionCounter++;
         const newLine = document.createElement("div");
-        newLine.textContent = "Revised date:";
-        newLine.contentEditable = "true";
+        newLine.innerHTML = `Revised date: <input type="date" class="revised-date-field" id="revisedDate${revisionCounter}">`;
         revBox.appendChild(newLine);
     });
 }
@@ -812,9 +813,36 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
   const revNo = document.getElementById('revNo')?.textContent?.trim() || '';
   const projectName = descriptionOfWork;
   
-  // Get last revised date from revBox (last editable field in the revision container)
+  // Get date for footer: use last revision date if exists, otherwise use offer date
   const revBoxFields = document.querySelectorAll('#revBox .revised-date-field');
-  const quoteDate = revBoxFields.length > 0 ? revBoxFields[revBoxFields.length - 1].textContent.trim() : '';
+  const offerDateField = document.querySelector('.date-field');
+  
+  let quoteDate = '';
+  
+  // Function to convert date from yyyy-mm-dd to dd/mm/yyyy for footer
+  function formatDateForFooter(dateString) {
+    if (!dateString) return '';
+    const parts = dateString.split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return dateString;
+  }
+  
+  // Check if there are any valid revision dates (from input fields)
+  const validRevisions = Array.from(revBoxFields)
+    .map(field => field.value || '')
+    .filter(value => value.trim() !== '');
+  
+  if (validRevisions.length > 0) {
+    // Use last valid revision date and format it
+    const lastRevisionDate = validRevisions[validRevisions.length - 1];
+    quoteDate = formatDateForFooter(lastRevisionDate);
+  } else {
+    // Use offer date if no valid revisions exist and format it
+    const offerDate = offerDateField ? (offerDateField.value || '') : '';
+    quoteDate = formatDateForFooter(offerDate);
+  }
 
   // Offer text from offer lines
   const offerLines = [
@@ -1067,24 +1095,47 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
     
     console.log('Offer Reference:', offerRef, 'Rev No:', revNo);
     
-    // Get other right content (offer date, revised dates, prepared by)
-    const offerDateSection = rightClone.querySelector('.offer-date-section')?.textContent?.trim() || '';
-    const revBoxContent = rightClone.querySelector('#revBox')?.textContent?.trim() || '';
-    const preparedSection = rightClone.querySelector('.prepared-section')?.textContent?.trim() || '';
-    
+    // Get other right content (offer date, revised dates, prepared by) - handle input fields
     let rightContentFormatted = '';
     
     // Add Offer Reference and Rev No in separate rows on right side
     rightContentFormatted += `Offer Reference: ${offerRef || ''}\n`;
     rightContentFormatted += `Rev. No: ${revNo || ''}\n\n`;
     
-    // Add space before Offer Date section
-    if (offerDateSection) {
-      rightContentFormatted += offerDateSection + '\n';
+    // Function to convert date from yyyy-mm-dd to dd/mm/yyyy
+    function formatDateToDDMMYYYY(dateString) {
+      if (!dateString) return '';
+      const parts = dateString.split('-');
+      if (parts.length === 3) {
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      }
+      return dateString;
     }
-    if (revBoxContent) {
-      rightContentFormatted += revBoxContent + '\n';
+    
+    // Get offer date from input field
+    const offerDateInput = document.querySelector('#offerDate');
+    const offerDateValue = offerDateInput ? offerDateInput.value : '';
+    if (offerDateValue) {
+      const formattedOfferDate = formatDateToDDMMYYYY(offerDateValue);
+      rightContentFormatted += `Offer Date\nDate: ${formattedOfferDate}\n\n`;
     }
+    
+    // Get all revised dates from input fields
+    const revisedDateInputs = document.querySelectorAll('#revBox .revised-date-field');
+    const revisedDates = Array.from(revisedDateInputs)
+      .map(input => input.value)
+      .filter(value => value.trim() !== '');
+    
+    if (revisedDates.length > 0) {
+      revisedDates.forEach(date => {
+        const formattedDate = formatDateToDDMMYYYY(date);
+        rightContentFormatted += `Revised date: ${formattedDate}\n`;
+      });
+      rightContentFormatted += '\n';
+    }
+    
+    // Get prepared by section
+    const preparedSection = rightClone.querySelector('.prepared-section')?.textContent?.trim() || '';
     if (preparedSection) {
       rightContentFormatted += preparedSection;
     }

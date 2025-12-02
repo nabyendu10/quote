@@ -499,21 +499,37 @@
 }
 
 .date-field {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid #000;
+    background: white;
+    border: 1px solid #000;
+    border-radius: 4px;
     color: black;
-    padding: 2px 5px;
-    min-width: 120px;
+    padding: 6px 8px;
+    min-width: 140px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.date-field:focus {
+    outline: none;
+    border-color: #0099ff;
+    box-shadow: 0 0 5px rgba(0, 153, 255, 0.3);
 }
 
 .revised-date-field {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid #000;
+    background: white;
+    border: 1px solid #000;
+    border-radius: 4px;
     color: black;
-    padding: 2px 5px;
-    min-width: 120px;
+    padding: 6px 8px;
+    min-width: 140px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.revised-date-field:focus {
+    outline: none;
+    border-color: #0099ff;
+    box-shadow: 0 0 5px rgba(0, 153, 255, 0.3);
 }
 
 .add-revision-btn {
