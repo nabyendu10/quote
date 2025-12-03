@@ -1598,108 +1598,108 @@ document.getElementById("generateQuoteBtn").addEventListener("click", async () =
                 // Use html2canvas for complex pages with high quality
                 async function renderPageToCanvas(page) {
                   const canvas = await html2canvas(page, { 
-                    scale: 1.5,  // Higher scale for better quality
-                    useCORS: true, 
+                    scale: 2,  // Higher scale for better quality (increased from 1.5 to 2)
+                    useCORS: false, // Disabled to prevent CORS issues with local images
                     backgroundColor: '#ffffff',
                     logging: false,
-                    allowTaint: true,
+                    allowTaint: true, // Allow tainted images
                     removeContainer: false,
-                    imageTimeout: 0,
+                    imageTimeout: 15000, // Increased timeout for image loading
                     width: page.offsetWidth,
                     height: page.offsetHeight,
                     onclone: function(clonedDoc) {
                       // Clean up interactive elements but maintain visual quality
-                      const buttons = clonedDoc.querySelectorAll('button, input, .delete-btn, .add-btn');
+                      const buttons = clonedDoc.querySelectorAll('button, input, .delete-btn, .add-btn, .page-control');
                       buttons.forEach(btn => btn.style.display = 'none');
+                      
+                      // Ensure header images are properly loaded and visible
+                      const headerImages = clonedDoc.querySelectorAll('.header-image img');
+                      headerImages.forEach(img => {
+                        if (img.src) {
+                          img.style.display = 'block';
+                          img.style.maxWidth = '100%';
+                          img.style.height = 'auto';
+                        }
+                      });
+                      
+                      // Enhance footer formatting for better PDF appearance
+                      const footers = clonedDoc.querySelectorAll('.footer');
+                      footers.forEach(footer => {
+                        footer.style.fontSize = '10px';
+                        footer.style.lineHeight = '1.2';
+                        footer.style.color = '#333';
+                        
+                        // Ensure footer rows are properly formatted
+                        const footerRows = footer.querySelectorAll('.footer-row');
+                        footerRows.forEach(row => {
+                          row.style.display = 'flex';
+                          row.style.justifyContent = 'space-between';
+                          row.style.alignItems = 'center';
+                          row.style.marginBottom = '2px';
+                        });
+                        
+                        const footerCols = footer.querySelectorAll('[class*="footer-col"]');
+                        footerCols.forEach(col => {
+                          col.style.fontSize = '10px';
+                          col.style.fontWeight = 'normal';
+                        });
+                      });
+                      
+                      // Pre-load all images to avoid CORS issues
+                      const images = clonedDoc.querySelectorAll('img');
+                      images.forEach(img => {
+                        if (img.src && img.src.startsWith('assets/')) {
+                          img.crossOrigin = 'anonymous';
+                          img.style.display = 'block';
+                        }
+                      });
                     }
                   });
                   
                   // Use PNG for better quality (no compression)
-                  return canvas.toDataURL('image/png');
+                  return canvas.toDataURL('image/png', 1.0); // Maximum quality
                 }
                 
                 try {
+                  // Pre-load all images before starting PDF generation
+                  const allImages = document.querySelectorAll('img[src^="assets/"]');
+                  await Promise.allSettled(Array.from(allImages).map(img => {
+                    return new Promise((resolve) => {
+                      if (img.complete) {
+                        resolve();
+                      } else {
+                        img.onload = resolve;
+                        img.onerror = resolve; // Continue even if image fails
+                        // Force reload if needed
+                        const src = img.src;
+                        img.src = '';
+                        img.src = src;
+                      }
+                    });
+                  }));
+                  
                   for (let i = 0; i < selectedPages.length; i++) {
                     const page = selectedPages[i];
                     
                     if (i > 0) pdf.addPage();
                     
-                    // Get page type for different handling
-                    const isLogoPage = page.classList.contains('page-logo-only');
-                    const isProjectPage = page.classList.contains('page-project');
-                    const isVendorPage = page.classList.contains('page-vendor');
+                    // Use html2canvas for ALL pages to maintain consistent formatting
+                    // This ensures headers, footers, and styling are preserved properly
+                    const imgData = await renderPageToCanvas(page);
                     
-                    if (isLogoPage) {
-                      // Handle logo page with direct image insertion - no compression
-                      const logoImg = page.querySelector('img');
-                      if (logoImg && logoImg.src) {
-                        const logoSrc = await prepareImage(logoImg.src);
-                        // Center the logo with original quality
-                        pdf.addImage(logoSrc, 'PNG', 60, 100, 90, 60);
-                      }
-                      
-                      // Add minimal text
-                      pdf.setFontSize(8);
-                      pdf.setTextColor(150);
-                      pdf.text('Page 1', 105, 280, { align: 'center' });
-                      
-                    } else if (isProjectPage) {
-                      // Handle project image pages with direct image insertion - no compression
-                      const projectImg = page.querySelector('.img-block img');
-                      if (projectImg && projectImg.src) {
-                        const imageSrc = await prepareImage(projectImg.src);
-                        
-                        // Add header
-                        pdf.setFontSize(16);
-                        pdf.setTextColor(44, 85, 48);
-                        const headerText = page.querySelector('.header .center').textContent;
-                        pdf.text(headerText, 105, 20, { align: 'center' });
-                        
-                        // Add image (centered, large) with original quality
-                        pdf.addImage(imageSrc, 'PNG', 20, 30, 170, 200);
-                        
-                        // Add footer
-                        pdf.setFontSize(8);
-                        pdf.setTextColor(100);
-                        const footerText = page.querySelector('.footer').textContent.trim();
-                        pdf.text(footerText, 105, 280, { align: 'center' });
-                      }
-                      
-                    } else if (isVendorPage) {
-                      // Handle vendor image pages with direct image insertion - no compression
-                      const vendorImg = page.querySelector('.vendor-block img');
-                      if (vendorImg && vendorImg.src) {
-                        const vendorSrc = await prepareImage(vendorImg.src);
-                        
-                        // Add header
-                        pdf.setFontSize(16);
-                        pdf.setTextColor(44, 85, 48);
-                        const headerText = page.querySelector('.header .center').textContent;
-                        pdf.text(headerText, 105, 20, { align: 'center' });
-                        
-                        // Add vendor image (centered, large) with original quality
-                        pdf.addImage(vendorSrc, 'PNG', 40, 60, 130, 120);
-                        
-                        // Add footer
-                        pdf.setFontSize(8);
-                        pdf.setTextColor(100);
-                        const footerText = page.querySelector('.footer').textContent.trim();
-                        pdf.text(footerText, 105, 280, { align: 'center' });
-                      }
-                      
-                    } else {
-                      // For other pages, use canvas with high quality
-                      const imgData = await renderPageToCanvas(page);
-                      
-                      const imgWidth = 210;
-                      const imgHeight = 297; // Fixed A4 height to prevent aspect ratio issues
-                      
-                      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                    }
+                    const imgWidth = 210;
+                    const imgHeight = 297; // A4 dimensions in mm
+                    
+                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
                   }
                 } catch (error) {
                   console.error('PDF generation error:', error);
-                  alert('Error generating PDF. Please try again.');
+                  console.error('Error details:', {
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack
+                  });
+                  alert('Error generating PDF: ' + error.message + '. Check console for details.');
                   return;
                 }
                 
